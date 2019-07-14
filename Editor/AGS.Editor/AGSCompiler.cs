@@ -232,7 +232,7 @@ namespace AGS.Editor
             }
 
             buildNames[target.Name] = _baseGameFileName;
-            Factory.AGSEditor.CurrentGame.WorkspaceState.SetLastBuildGameFiles(buildNames);
+            _game.WorkspaceState.SetLastBuildGameFiles(buildNames);
         }
 
         private void CreateCompiledFiles(CompileMessages errors, bool forceRebuild)
@@ -256,7 +256,7 @@ namespace AGS.Editor
             // TODO: This is also awkward, we call Cleanup for active targets to make sure
             // that in case they changed the game binary name an old one gets removed.
             // Also please see the comment about build steps below.
-            var buildNames = Factory.AGSEditor.CurrentGame.WorkspaceState.GetLastBuildGameFiles();
+            var buildNames = _game.WorkspaceState.GetLastBuildGameFiles();
             foreach (IBuildTarget target in BuildTargetsInfo.GetSelectedBuildTargets())
             {
                 string oldName;
@@ -285,7 +285,7 @@ namespace AGS.Editor
                 if (target != targetDataFile) target.Build(errors, forceRebuild);
                 buildNames[target.Name] = Factory.AGSEditor.BaseGameFileName;
             }
-            Factory.AGSEditor.CurrentGame.WorkspaceState.SetLastBuildGameFiles(buildNames);
+            _game.WorkspaceState.SetLastBuildGameFiles(buildNames);
             return null;
         }
 
