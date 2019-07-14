@@ -255,7 +255,7 @@ namespace AGS.Editor
             _sourceControl = new SourceControlProvider();
             _debugger = new DebugController(_engineComms);
             _debugger.BreakAtLocation += new DebugController.BreakAtLocationHandler(_debugger_BreakAtLocation);
-            _agsCompiler = new AGSCompiler(this, _game);
+            _agsCompiler = new AGSCompiler(this, _game, this.BaseGameFileName);
 
             _builtInScriptHeader = new Script(BUILT_IN_HEADER_FILE_NAME, Resources.ResourceManager.GetResourceAsString("agsdefns.sh"), true);
             AutoComplete.ConstructCache(_builtInScriptHeader);

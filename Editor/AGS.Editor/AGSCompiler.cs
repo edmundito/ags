@@ -17,14 +17,16 @@ namespace AGS.Editor
 
         private AGSEditor _agsEditor;
         private Game _game;
+        private readonly string _baseGameFileName;
 
         private static readonly string[] _scriptAPIVersionMacros;
         private static readonly string[] _scriptCompatLevelMacros;
 
-        public AGSCompiler(AGSEditor agsEditor, Game game)
+        public AGSCompiler(AGSEditor agsEditor, Game game, string baseGameFileName)
         {
             _agsEditor = agsEditor;
             _game = game;
+            _baseGameFileName = baseGameFileName;
         }
 
         static AGSCompiler()
@@ -215,11 +217,11 @@ namespace AGS.Editor
         {
             IBuildTarget target = BuildTargetsInfo.FindBuildTargetByName(BuildTargetDebug.DEBUG_TARGET_NAME);
 
-            var buildNames = Factory.AGSEditor.CurrentGame.WorkspaceState.GetLastBuildGameFiles();
+            var buildNames = _game.WorkspaceState.GetLastBuildGameFiles();
             string oldName;
             if (buildNames.TryGetValue(target.Name, out oldName))
             {
-                if (!string.IsNullOrWhiteSpace(oldName) && oldName != Factory.AGSEditor.BaseGameFileName)
+                if (!string.IsNullOrWhiteSpace(oldName) && oldName != _baseGameFileName)
                     target.DeleteMainGameData(oldName);
             }
 
@@ -229,7 +231,7 @@ namespace AGS.Editor
                 ExtraOutputCreationStep(true);
             }
 
-            buildNames[target.Name] = Factory.AGSEditor.BaseGameFileName;
+            buildNames[target.Name] = _baseGameFileName;
             Factory.AGSEditor.CurrentGame.WorkspaceState.SetLastBuildGameFiles(buildNames);
         }
 
