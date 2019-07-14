@@ -92,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AGSCompiler.cs" />
     <Compile Include="AGSEditor.cs" />
     <Compile Include="ColorThemes\ColorTheme.cs" />
     <Compile Include="ColorThemes\ColorThemes.cs" />

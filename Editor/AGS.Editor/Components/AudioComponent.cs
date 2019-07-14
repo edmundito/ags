@@ -52,7 +52,7 @@ namespace AGS.Editor.Components
             _iconMappings.Add(AudioClipFileType.MOD, "AGSAudioClipIconMod");
 
             _agsEditor.GetSourceControlFileList += new GetSourceControlFileListHandler(_agsEditor_GetSourceControlFileList);
-            _agsEditor.PreCompileGame += new AGSEditor.PreCompileGameHandler(_agsEditor_PreCompileGame);
+            _agsEditor.Compiler.PreCompileGame += new AGSCompiler.PreCompileGameHandler(_agsEditor_PreCompileGame);
 
             RecreateDocument();
             _guiController.RegisterIcon("AGSAudioClipsIcon", Resources.ResourceManager.GetIcon("audio.ico"));

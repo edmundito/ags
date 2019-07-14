@@ -27,8 +27,8 @@ namespace AGS.Editor.Components
         public SpeechComponent(GUIController guiController, AGSEditor agsEditor)
             : base(guiController, agsEditor)
         {
-            _agsEditor.ExtraCompilationStep += new AGSEditor.ExtraCompilationStepHandler(_agsEditor_ExtraCompilationStep);
-            _agsEditor.ExtraOutputCreationStep += new AGSEditor.ExtraOutputCreationStepHandler(_agsEditor_ExtraOutputCreationStep);
+            _agsEditor.Compiler.ExtraCompilationStep += new AGSCompiler.ExtraCompilationStepHandler(_agsEditor_ExtraCompilationStep);
+            _agsEditor.Compiler.ExtraOutputCreationStep += new AGSCompiler.ExtraOutputCreationStepHandler(_agsEditor_ExtraOutputCreationStep);
             _agsEditor.GetSourceControlFileList += new GetSourceControlFileListHandler(_agsEditor_GetSourceControlFileList);
         }
 

@@ -57,7 +57,7 @@ namespace AGS.Editor.Components
             _guiController.OnGetScript += new GUIController.GetScriptHandler(GUIController_OnGetScript);
             _guiController.OnScriptChanged += new GUIController.ScriptChangedHandler(GUIController_OnScriptChanged);
             _guiController.OnGetScriptEditorControl += new GUIController.GetScriptEditorControlHandler(_guiController_OnGetScriptEditorControl);
-            _agsEditor.PreCompileGame += new AGSEditor.PreCompileGameHandler(AGSEditor_PreCompileGame);
+            _agsEditor.Compiler.PreCompileGame += new AGSCompiler.PreCompileGameHandler(AGSEditor_PreCompileGame);
             _agsEditor.PreSaveGame += new AGSEditor.PreSaveGameHandler(AGSEditor_PreSaveGame);
             _agsEditor.ProcessAllGameTexts += new AGSEditor.ProcessAllGameTextsHandler(AGSEditor_ProcessAllGameTexts);
 			_agsEditor.PreDeleteSprite += new AGSEditor.PreDeleteSpriteHandler(AGSEditor_PreDeleteSprite);
@@ -598,7 +598,7 @@ namespace AGS.Editor.Components
             Room room = (Room)parameter;
             _agsEditor.RegenerateScriptHeader(room);
             List<Script> headers = (List<Script>)_agsEditor.GetAllScriptHeaders();
-            _agsEditor.CompileScript(room.Script, headers, null, true);
+            _agsEditor.Compiler.CompileScript(room.Script, headers, null, true);
 
             _nativeProxy.SaveRoom(room);
             room.Modified = false;

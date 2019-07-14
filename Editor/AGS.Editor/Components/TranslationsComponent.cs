@@ -36,7 +36,7 @@ namespace AGS.Editor.Components
             : base(guiController, agsEditor)
         {
             _guiController.ProjectTree.OnAfterLabelEdit += new ProjectTree.AfterLabelEditHandler(ProjectTree_OnAfterLabelEdit);
-            _agsEditor.PreCompileGame += new AGSEditor.PreCompileGameHandler(AGSEditor_PreCompileGame);
+            _agsEditor.Compiler.PreCompileGame += new AGSCompiler.PreCompileGameHandler(AGSEditor_PreCompileGame);
             _timer.Interval = 20;
             _timer.Tick += new EventHandler(_timer_Tick);
 
