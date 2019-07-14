@@ -250,9 +250,12 @@ namespace AGS.Editor
         private object CreateCompiledFiles(object parameter)
         {
             CompileScriptsParameters parameters = (CompileScriptsParameters)parameter;
-            CompileMessages errors = parameters.Errors;
-            bool forceRebuild = parameters.RebuildAll;
+            CreateCompiledFiles(parameters.RebuildAll, parameters.Errors);
+            return null;
+        }
 
+        private void CreateCompiledFiles(bool forceRebuild, CompileMessages errors)
+        {
             // TODO: This is also awkward, we call Cleanup for active targets to make sure
             // that in case they changed the game binary name an old one gets removed.
             // Also please see the comment about build steps below.
@@ -286,20 +289,23 @@ namespace AGS.Editor
                 buildNames[target.Name] = Factory.AGSEditor.BaseGameFileName;
             }
             _game.WorkspaceState.SetLastBuildGameFiles(buildNames);
-            return null;
         }
 
         private object CompileScripts(object parameter)
         {
             CompileScriptsParameters parameters = (CompileScriptsParameters)parameter;
-            CompileMessages errors = parameters.Errors;
+            return CompileScripts(parameters.RebuildAll, parameters.Errors);
+        }
+
+        private CompileMessage CompileScripts(bool forceRebuild, CompileMessages errors)
+        {
             CompileMessage errorToReturn = null;
             _agsEditor.RegenerateScriptHeader(null);
             List<Script> headers = _agsEditor.GetInternalScriptHeaders();
 
             try
             {
-                Script dialogScripts = CompileDialogs(errors, parameters.RebuildAll);
+                Script dialogScripts = CompileDialogs(errors, forceRebuild);
 
                 _game.ScriptsToCompile = new ScriptsAndHeaders();
 
