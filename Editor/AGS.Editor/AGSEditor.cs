@@ -903,6 +903,7 @@ namespace AGS.Editor
         {
             CompileMessages compileMessages = _agsCompiler.CompileGame(forceRebuild, createMiniExeForDebug);
 
+            Factory.GUIController.ClearOutputPanel();
             Factory.GUIController.ShowOutputPanel(compileMessages);
             ReportErrorsIfAppropriate(compileMessages);
 

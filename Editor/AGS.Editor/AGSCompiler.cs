@@ -47,7 +47,6 @@ namespace AGS.Editor
 
         public CompileMessages CompileGame(bool forceRebuild, bool createMiniExeForDebug)
         {
-            Factory.GUIController.ClearOutputPanel();
             CompileMessages compileMessages = new CompileMessages();
 
             Utilities.EnsureStandardSubFoldersExist();
