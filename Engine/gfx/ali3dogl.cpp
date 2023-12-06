@@ -54,6 +54,7 @@ const char* fbo_extension_string = "GL_OES_framebuffer_object";
 const void (*glSwapIntervalEXT)(int) = NULL;
 
 #define GL_FRAMEBUFFER_EXT GL_FRAMEBUFFER
+#define GL_FRAMEBUFFER_COMPLETE_EXT GL_FRAMEBUFFER_COMPLETE
 #define GL_COLOR_ATTACHMENT0_EXT GL_COLOR_ATTACHMENT0
 
 #endif //AGS_OPENGL_ES2
