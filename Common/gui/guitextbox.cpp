@@ -18,6 +18,8 @@
 #include "util/stream.h"
 #include "util/string_utils.h"
 
+#include <SDL.h>
+
 #define GUITEXTBOX_LEGACY_TEXTLEN 200
 
 std::vector<AGS::Common::GUITextBox> guitext;
@@ -106,7 +108,15 @@ void GUITextBox::OnKeyPress(const KeyInput &ki)
     switch (ki.Key)
     {
     case eAGSKeyCodeReturn:
+#ifdef AGS_PLATFORM_OS_IOS
+        // iOS: Hide the keyboard but let the user submit/"activate" manually
+        if (SDL_IsTextInputActive())
+        {
+            SDL_StopTextInput();
+        }
+#else
         IsActivated = true;
+#endif
         return;
     case eAGSKeyCodeBackspace:
         Backspace(Text);

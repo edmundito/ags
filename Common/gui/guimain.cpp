@@ -27,6 +27,10 @@
 #include "util/string_utils.h"
 #include "util/string_compat.h"
 
+#ifdef AGS_PLATFORM_OS_IOS
+#include <SDL.h>
+#endif
+
 using namespace AGS::Common;
 
 #define MOVER_MOUSEDOWNLOCKED -4000
@@ -548,10 +552,33 @@ void GUIMain::OnMouseButtonUp()
     }
 
     if (MouseDownCtrl < 0)
+    {
+#ifdef AGS_PLATFORM_OS_IOS
+        if (SDL_IsTextInputActive())
+        {
+            SDL_StopTextInput();
+        }
+#endif
         return;
+    }
 
-    _controls[MouseDownCtrl]->OnMouseUp();
-    MouseDownCtrl = -1;
+  _controls[MouseDownCtrl]->OnMouseUp();
+  
+#ifdef AGS_PLATFORM_OS_IOS
+    if (_ctrlRefs[MouseDownCtrl].first == kGUITextBox)
+    {
+        if (!SDL_IsTextInputActive())
+        {
+            SDL_StartTextInput();
+        }
+    }
+    else if (SDL_IsTextInputActive())
+    {
+        SDL_StopTextInput();
+    }
+#endif
+  
+  MouseDownCtrl = -1;
 }
 
 void GUIMain::ReadFromFile(Stream *in, GuiVersion gui_version)
