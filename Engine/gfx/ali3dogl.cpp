@@ -303,7 +303,13 @@ bool OGLGraphicsDriver::CreateWindowAndGlContext(const DisplayMode &mode)
 #if AGS_PLATFORM_OS_IOS
   if (SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0) != 0)
     SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Error occured setting attribute SDL_GL_DEPTH_SIZE");
-//  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+  
+  if (SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8) != 0 ||
+      SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8) != 0 ||
+      SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8) != 0)
+  {
+    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Error occured setting one of the attributes SDL_GL(RED | GREEN | BLUE)_SIZE");
+  }
 #endif
   if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) != 0)
     SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Error occured setting attribute SDL_GL_DOUBLEBUFFER: %s", SDL_GetError());
