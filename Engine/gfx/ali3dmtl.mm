@@ -102,6 +102,84 @@ bool MetalGraphicsDriver::FirstTimeInit()
     return true;
 }
 
+bool MetalGraphicsDriver::CreateWindowAndMetalContext(const DisplayMode &mode)
+{
+    // First setup SDL attributes for Metal
+    if (SDL_SetHint(SDL_HINT_RENDER_DRIVER, "metal") != SDL_TRUE) {
+        Debug::Printf(kDbgMsg_Warn, "Failed to set SDL render driver to Metal: %s", SDL_GetError());
+    }
+
+    // Create SDL window with Metal support
+    SDL_Window *sdl_window = sys_window_create("", mode.DisplayIndex, mode.Width, mode.Height, mode.Mode, SDL_WINDOW_METAL);
+    if (!sdl_window) {
+        Debug::Printf(kDbgMsg_Error, "Failed to create SDL window for Metal: %s", SDL_GetError());
+        return false;
+    }
+
+    // Get the Metal device from the window
+    SDL_MetalView metalView = SDL_Metal_CreateView(sdl_window);
+    if (!metalView) {
+        Debug::Printf(kDbgMsg_Error, "Failed to create Metal view: %s", SDL_GetError());
+        sys_window_destroy();
+        return false;
+    }
+
+    // Get the Metal device and command queue
+    _device = SDL_Metal_GetDevice(metalView);
+    if (!_device) {
+        Debug::Printf(kDbgMsg_Error, "Failed to get Metal device");
+        SDL_Metal_DestroyView(metalView);
+        sys_window_destroy();
+        return false;
+    }
+
+    // Create command queue
+    _commandQueue = [_device newCommandQueue];
+    if (!_commandQueue) {
+        Debug::Printf(kDbgMsg_Error, "Failed to create Metal command queue");
+        SDL_Metal_DestroyView(metalView);
+        sys_window_destroy();
+        return false;
+    }
+
+    // Store the Metal view
+    _metalView = metalView;
+
+    // Create default render pipeline
+    CreateDefaultRenderPipeline();
+
+    // Log Metal device information
+    const char *device_name = [[_device name] UTF8String];
+    const char *device_vendor = [[_device vendorName] UTF8String];
+    String adapter_info = String::FromFormat(
+        "\tMetal: %s\n\tVendor: %s",
+        device_name, device_vendor
+    );
+    Debug::Printf(kDbgMsg_Info, "Metal adapter info:\n%s", adapter_info.GetCStr());
+
+    return true;
+}
+
+void MetalGraphicsDriver::DeleteWindowAndMetalContext()
+{
+    if (_metalView) {
+        SDL_Metal_DestroyView(_metalView);
+        _metalView = nullptr;
+    }
+    
+    if (_commandQueue) {
+        [_commandQueue release];
+        _commandQueue = nil;
+    }
+    
+    if (_device) {
+        [_device release];
+        _device = nil;
+    }
+    
+    sys_window_destroy();
+}
+
 void MetalGraphicsDriver::CreateDefaultRenderPipeline()
 {
     // Create render pipeline descriptor
@@ -236,6 +314,162 @@ void MetalGraphicsDriver::RenderSpritesAtScreenResolution(bool enabled)
     // Implement sprite resolution handling
 }
 
+void MetalGraphicsDriver::RenderTexture(MTLBitmap *bmpToDraw, int draw_x, int draw_y,
+    const glm::mat4 &projection, const glm::mat4 &matGlobal,
+    const SpriteColorTransform &color, const Size &rend_sz)
+{
+    const int alpha = (color.Alpha * bmpToDraw->_alpha) / 255;
+    
+    // Create command buffer and encoder
+    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
+    id<MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:_metalView.currentRenderPassDescriptor];
+    
+    // Set pipeline state
+    [renderEncoder setRenderPipelineState:_pipelineState];
+    
+    // Set up vertex buffer
+    const float width = bmpToDraw->GetWidthToRender();
+    const float height = bmpToDraw->GetHeightToRender();
+    const float xProportion = width / (float)bmpToDraw->_width;
+    const float yProportion = height / (float)bmpToDraw->_height;
+    
+    // Create vertex data
+    struct Vertex {
+        float2 position;
+        float2 texCoord;
+    };
+    
+    const Vertex vertices[] = {
+        {{draw_x, draw_y}, {0.0f, 0.0f}},
+        {{draw_x + width, draw_y}, {1.0f, 0.0f}},
+        {{draw_x, draw_y + height}, {0.0f, 1.0f}},
+        {{draw_x + width, draw_y + height}, {1.0f, 1.0f}}
+    };
+    
+    id<MTLBuffer> vertexBuffer = [_device newBufferWithBytes:vertices
+                                                    length:sizeof(vertices)
+                                                   options:MTLResourceStorageModeShared];
+    
+    [renderEncoder setVertexBuffer:vertexBuffer offset:0 atIndex:0];
+    
+    // Set up uniforms
+    struct Uniforms {
+        float4x4 modelViewProjection;
+    } uniforms;
+    
+    // Calculate transformation matrix
+    glm::mat4 transform = projection;
+    transform = glmex::translate(transform, rend_sz.Width / 2.0f, rend_sz.Height / 2.0f);
+    transform = transform * matGlobal;
+    transform = glmex::transform2d(transform, draw_x, draw_y, width, height, 0.f);
+    
+    // Convert GLM matrix to Metal matrix
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            uniforms.modelViewProjection.columns[i][j] = transform[i][j];
+        }
+    }
+    
+    id<MTLBuffer> uniformBuffer = [_device newBufferWithBytes:&uniforms
+                                                     length:sizeof(uniforms)
+                                                    options:MTLResourceStorageModeShared];
+    
+    [renderEncoder setVertexBuffer:uniformBuffer offset:0 atIndex:1];
+    
+    // Set up texture
+    [renderEncoder setFragmentTexture:bmpToDraw->_renderTarget atIndex:0];
+    
+    // Set up fragment shader parameters based on tint/lighting
+    if (bmpToDraw->_tintSaturation > 0) {
+        // Use tint shader
+        struct TintParams {
+            float3 tintHSV;
+            float tintAmount;
+            float tintLuminance;
+            float alpha;
+        } tintParams;
+        
+        // Convert RGB to HSV
+        float rgb[3] = {
+            bmpToDraw->_red / 255.0f,
+            bmpToDraw->_green / 255.0f,
+            bmpToDraw->_blue / 255.0f
+        };
+        
+        // Calculate HSV values
+        float max = std::max(std::max(rgb[0], rgb[1]), rgb[2]);
+        float min = std::min(std::min(rgb[0], rgb[1]), rgb[2]);
+        float delta = max - min;
+        
+        tintParams.tintHSV.x = 0.0f; // Hue
+        if (delta > 0.0f) {
+            if (max == rgb[0]) {
+                tintParams.tintHSV.x = (rgb[1] - rgb[2]) / delta;
+            } else if (max == rgb[1]) {
+                tintParams.tintHSV.x = 2.0f + (rgb[2] - rgb[0]) / delta;
+            } else {
+                tintParams.tintHSV.x = 4.0f + (rgb[0] - rgb[1]) / delta;
+            }
+            tintParams.tintHSV.x *= 60.0f;
+            if (tintParams.tintHSV.x < 0.0f) {
+                tintParams.tintHSV.x += 360.0f;
+            }
+        }
+        
+        tintParams.tintHSV.y = max > 0.0f ? delta / max : 0.0f; // Saturation
+        tintParams.tintHSV.z = max; // Value
+        tintParams.tintAmount = bmpToDraw->_tintSaturation / 255.0f;
+        tintParams.tintLuminance = bmpToDraw->_lightLevel > 0 ? bmpToDraw->_lightLevel / 255.0f : 1.0f;
+        tintParams.alpha = alpha / 255.0f;
+        
+        id<MTLBuffer> tintBuffer = [_device newBufferWithBytes:&tintParams
+                                                      length:sizeof(tintParams)
+                                                     options:MTLResourceStorageModeShared];
+        [renderEncoder setFragmentBuffer:tintBuffer offset:0 atIndex:0];
+    } else if (bmpToDraw->_lightLevel > 0) {
+        // Use light shader
+        struct LightParams {
+            float4 lightColor;
+            float lightAmount;
+        } lightParams;
+        
+        float light_lev = 1.0f;
+        if (bmpToDraw->_lightLevel < 256) {
+            light_lev = -((bmpToDraw->_lightLevel * 192) / 256 + 64) / 255.0f;
+        } else {
+            light_lev = ((bmpToDraw->_lightLevel - 256) / 2) / 255.0f;
+        }
+        
+        lightParams.lightColor = {1.0f, 1.0f, 1.0f, alpha / 255.0f};
+        lightParams.lightAmount = light_lev;
+        
+        id<MTLBuffer> lightBuffer = [_device newBufferWithBytes:&lightParams
+                                                       length:sizeof(lightParams)
+                                                      options:MTLResourceStorageModeShared];
+        [renderEncoder setFragmentBuffer:lightBuffer offset:0 atIndex:0];
+    } else {
+        // Use transparency shader
+        float alphaValue = alpha / 255.0f;
+        id<MTLBuffer> alphaBuffer = [_device newBufferWithBytes:&alphaValue
+                                                       length:sizeof(float)
+                                                      options:MTLResourceStorageModeShared];
+        [renderEncoder setFragmentBuffer:alphaBuffer offset:0 atIndex:0];
+    }
+    
+    // Draw the quad
+    [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangleStrip
+                     vertexStart:0
+                     vertexCount:4];
+    
+    // End encoding and commit
+    [renderEncoder endEncoding];
+    [commandBuffer commit];
+    
+    // Release resources
+    [vertexBuffer release];
+    [uniformBuffer release];
+}
+
 // Metal Graphics Factory Implementation
 size_t MetalGraphicsFactory::GetFilterCount() const
 {
@@ -259,6 +493,7 @@ IGraphicsDriver *MetalGraphicsFactory::CreateDriver(const String &id)
         return new MetalGraphicsDriver();
     return nullptr;
 }
+
 
 } // namespace MTL
 } // namespace Engine
