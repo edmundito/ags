@@ -124,7 +124,8 @@ OPT_SAVESCREENSHOTLAYER, CHF_TURNWHENFACE. Button's WrapText and padding.
 Few minor behavior changes.
 3.6.2.12:
 Incremented for safety fallback purposes, few very old text alignment mistakes fixed in the engine.
-
+3.6.2.99:
+Font.CharacterSpacing
 */
 
 enum GameDataVersion
@@ -179,7 +180,8 @@ enum GameDataVersion
     kGameVersion_362            = 3060200,
     kGameVersion_362_03         = 3060203,
     kGameVersion_362_12         = 3060212,
-    kGameVersion_Current        = kGameVersion_362_12
+    kGameVersion_362_99         = 3060299,
+    kGameVersion_Current        = kGameVersion_362_99
 };
 
 // Data format version of the loaded game
