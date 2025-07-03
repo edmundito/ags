@@ -1,13 +1,12 @@
 {
     "version": "3.6.2.99",
     "versionFriendly": "3.6.2",
-    "versionSp": "P1",
+    "versionSp": "Julia1",
     "versionYear": "2025",
-    "versionMonth": "June",
+    "versionMonth": "July",
     "versionIsBeta": "false",
     "appID": "7a604530-45b6-4e95-a729-22d212601256",
     "licenseLink": "https://opensource.org/license/artistic-2-0/",
-  
     "dependencies": {
         "sdlsound": {
             "revision": "474dbf755a1b67ebe7a55467b4f65e033f268aff",
