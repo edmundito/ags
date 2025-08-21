@@ -113,6 +113,12 @@ public:
     virtual void GetFontMetrics(int fontNumber, FontMetrics *metrics) = 0;
     // Perform any necessary adjustments when the AA mode is toggled
     virtual void AdjustFontForAntiAlias(int fontNumber, bool aa_mode) = 0;
+    // Get a range of supported character codes (first and last present in the font)
+    virtual void GetCharCodeRange(int fontNumber, std::pair<int, int> *char_codes) = 0;
+    // Get a list of supported character codes
+    virtual void GetValidCharCodes(int fontNumber, std::vector<int> &char_codes) = 0;
+    // Sets additional character spacing, in pixels (can be positive or negative)
+    virtual void SetCharacterSpacing(int fontNumber, int spacing) = 0;
 
 protected:
     IAGSFontRendererInternal() = default;
