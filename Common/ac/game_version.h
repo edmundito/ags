@@ -126,6 +126,8 @@ Few minor behavior changes.
 Script module names are written in the game data.
 3.6.2.12:
 Incremented for safety fallback purposes, few very old text alignment mistakes fixed in the engine.
+3.6.3 cherry-pick:
+font character spacing
 
 */
 
