@@ -1,0 +1,13 @@
+# AGS.Controls vendors third-party sources into its own assembly:
+# Editor/AGS.Controls/ScintillaNET/ and Editor/AGS.Controls/AdressBarEx/.
+# Those types are public, so DocFX documents them by default, burying the
+# AGS plugin API under hundreds of unrelated pages.
+#
+# Allow-list rather than deny-list: anything not under an AGS namespace is
+# not part of the plugin API, and any future vendored code is excluded
+# automatically instead of needing another rule here.
+apiRules:
+  - include:
+      uidRegex: ^AGS(\.|$)
+  - exclude:
+      uidRegex: .*

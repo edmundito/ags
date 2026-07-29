@@ -1,0 +1,39 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [ "*.dll" ],
+          "src": "_assemblies"
+        }
+      ],
+      "dest": "api",
+      "outputFormat": "mref",
+      "allowCompilationErrors": true,
+      "filter": "filterConfig.yml"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [ "api/**.yml", "api/index.md" ]
+      },
+      {
+        "files": [ "index.md", "engine-plugins.md", "editor-plugins.md", "toc.yml" ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [ "engine/**" ]
+      }
+    ],
+    "output": "_site",
+    "template": [ "default", "modern" ],
+    "globalMetadata": {
+      "_appTitle": "AGS Plugin API",
+      "_appName": "AGS Plugin API",
+      "_enableSearch": true,
+      "_disableContribution": true
+    }
+  }
+}

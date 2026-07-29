@@ -1,0 +1,38 @@
+PROJECT_NAME           = "AGS Engine Plugin API"
+PROJECT_BRIEF          = "Native plugin interface for the AGS engine (agsplugin.h)"
+OUTPUT_DIRECTORY       = engine
+HTML_OUTPUT            = .
+CREATE_SUBDIRS         = NO
+GENERATE_LATEX         = NO
+GENERATE_HTML          = YES
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
+QUIET                  = YES
+CASE_SENSE_NAMES       = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_AS_ERROR          = FAIL_ON_WARNINGS
+
+INPUT                  = ../../Engine/plugin/agsplugin.h
+FILE_PATTERNS          = *.h
+RECURSIVE              = NO
+
+EXTRACT_ALL            = NO
+EXTRACT_STATIC         = YES
+EXTRACT_PRIVATE        = YES
+HIDE_UNDOC_MEMBERS     = NO
+JAVADOC_AUTOBRIEF      = YES
+OPTIMIZE_OUTPUT_FOR_C  = NO
+SORT_MEMBER_DOCS       = NO
+SORT_BRIEF_DOCS        = NO
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+SEARCH_INCLUDES        = NO
+PREDEFINED             = THIS_IS_THE_PLUGIN \
+                         WINDOWS_VERSION \
+                         _WIN32 \
+                         "AGSIFUNC(type)=virtual type" \
+                         "DLLEXPORT=extern \"C\""

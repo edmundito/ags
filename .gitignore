@@ -205,3 +205,9 @@ Editor/References/**/*.dll
 /Plugins/AGSSpriteFont/msvc/.temp/
 /Plugins/agstouch/msvc/.build/
 /Plugins/agstouch/msvc/.temp/
+
+# Plugin API documentation: generated output
+/docs/ags_plugin_api/_site/
+/docs/ags_plugin_api/_assemblies/
+/docs/ags_plugin_api/engine/
+/docs/ags_plugin_api/api/

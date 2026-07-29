@@ -1,0 +1,16 @@
+- name: Home
+  href: index.md
+- name: Engine Plugins (C++)
+  href: engine-plugins.md
+  items:
+    - name: Overview
+      href: engine-plugins.md
+    - name: API Reference
+      href: engine/index.html
+- name: Editor Plugins (.NET)
+  href: editor-plugins.md
+  items:
+    - name: Overview
+      href: editor-plugins.md
+    - name: API Reference
+      href: api/index.md
