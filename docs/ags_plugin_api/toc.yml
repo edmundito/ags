@@ -5,6 +5,8 @@
   items:
     - name: Overview
       href: engine-plugins.md
+    - name: Interface Versions
+      href: engine-plugin-versions.md
     - name: API Reference
       href: engine/index.html
 - name: Editor Plugins (.NET)

@@ -47,6 +47,10 @@ provides. Every method in the reference is tagged with the version that
 introduced it. **Check `version` before calling anything newer than the minimum
 you require**, or you will call into an engine that has no such method.
 
+The interface version is *not* related to the AGS version — they are
+independent counters. See [Interface versions](engine-plugin-versions.md) for
+what each one added, and for the release each recent version first shipped in.
+
 ## Portability
 
 Plugins are **not portable**. A game using your plugin cannot be built for a

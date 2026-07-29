@@ -61,6 +61,8 @@ Assert-FileContains -Path (Join-Path $SitePath 'index.html') -Pattern 'Engine pl
 Assert-FileContains -Path (Join-Path $SitePath 'index.html') -Pattern 'Editor plugins' -Because 'the landing page must introduce both plugin models'
 Assert-FileContains -Path (Join-Path $SitePath 'index.html') -Pattern 'two different interfaces named' -Because 'the IAGSEditor name collision must be called out'
 Assert-FileContains -Path (Join-Path $SitePath 'engine-plugins.html') -Pattern 'AGS_EngineStartup' -Because 'the native entry point must be named'
+Assert-FileContains -Path (Join-Path $SitePath 'engine-plugin-versions.html') -Pattern 'PLUGIN_API_VERSION' -Because 'the version reference must name where the current version lives'
+Assert-FileContains -Path (Join-Path $SitePath 'engine-plugin-versions.html') -Pattern '3.6.2.5' -Because 'the interface-to-engine version mapping must be present'
 Assert-FileContains -Path (Join-Path $SitePath 'editor-plugins.html') -Pattern 'IAGSEditorPlugin' -Because 'the managed entry point must be named'
 
 # --- C# (DocFX) reference ---

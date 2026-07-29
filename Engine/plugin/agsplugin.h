@@ -752,61 +752,197 @@ protected:
 };
 
 
-// Plugin events
-//
-// Below are interface 3 and later
-/** Plugin event. */
+/**
+ * @name Plugin events
+ *
+ * Bit flags passed to IAGSEngine::RequestEventHook. Once hooked, the engine
+ * calls the plugin's AGS_EngineOnEvent with the event flag and a data value
+ * whose meaning depends on the event.
+ *
+ * Each event has its own interface version requirement, which may be higher
+ * than the version that introduced RequestEventHook itself. Check
+ * IAGSEngine::version before requesting an event.
+ *
+ * @note Events marked *render-stage* pass a data value that depends on the
+ *       graphics driver: 0 under the Software driver, and a pointer to the
+ *       `IDirect3DDevice9` currently rendering under the D3D9 driver, which
+ *       you may use to render extra primitives. The D3D9 device pointer
+ *       requires interface version 20 or above.
+ *
+ * @see IAGSEngine::RequestEventHook
+ * @see IAGSEngine::UnrequestEventHook
+ * @{
+ */
+
+/**
+ * Triggered when the user presses a key on the keyboard.
+ *
+ * Data value: ASCII value of the keystroke, as for the script `on_key_press`,
+ * except that lower case a-z arrive as 97..122.
+ * @since Interface version 3
+ */
 #define AGSE_KEYPRESS        0x01
-/** Plugin event. */
+/**
+ * Triggered when the user clicks a mouse button.
+ *
+ * Data value: the button pressed — 1 left, 2 right, 3 middle.
+ * @since Interface version 3
+ */
 #define AGSE_MOUSECLICK      0x02
-/** Plugin event. */
+/**
+ * Triggered every frame after the whole game has been drawn, but before the
+ * mouse cursor is painted on top. Render-stage event.
+ * @since Interface version 3
+ */
 #define AGSE_POSTSCREENDRAW  0x04
-// Below are interface 4 and later
-/** Plugin event. */
+/**
+ * Triggered every frame right after the room background has been drawn, but
+ * before anything else. Render-stage event.
+ * @since Interface version 4
+ */
 #define AGSE_PRESCREENDRAW   0x08
-// Below are interface 5 and later
-/** Plugin event. */
+/**
+ * Triggered when the game position is saved. Write your own data with
+ * IAGSEngine::FWrite.
+ *
+ * Data value: the save game's file handle.
+ *
+ * @warning The script engine is in an invalid state here. Do not call any
+ *          script functions. Use #AGSE_PRESAVEGAME if you need to act while
+ *          the script engine is still working.
+ * @since Interface version 5
+ */
 #define AGSE_SAVEGAME        0x10
-/** Plugin event. */
+/**
+ * Triggered when the game position is loaded. Read your data back with
+ * IAGSEngine::FRead.
+ *
+ * Data value: the save game's file handle.
+ *
+ * @warning You **must** read back exactly as many bytes as you wrote in
+ *          #AGSE_SAVEGAME. The script engine is in an invalid state here; do
+ *          not call any script functions. Use #AGSE_POSTRESTOREGAME if you
+ *          need the script engine to be operational.
+ * @since Interface version 5
+ */
 #define AGSE_RESTOREGAME     0x20
-// Below are interface 6 and later
-/** Plugin event. */
+/**
+ * Triggered every frame once the room viewports have been constructed, but
+ * before GUIs and screen overlays are drawn over them. Render-stage event.
+ * @since Interface version 6
+ */
 #define AGSE_PREGUIDRAW      0x40
-/** Plugin event. */
+/**
+ * Triggered when the player leaves the current room, after the Player Leaves
+ * Screen event but before the screen fades out.
+ *
+ * Data value: the old room number.
+ * @since Interface version 6
+ */
 #define AGSE_LEAVEROOM       0x80
-/** Plugin event. */
+/**
+ * Triggered when the player enters a new room, before the screen fades in.
+ *
+ * Data value: the new room number.
+ * @since Interface version 6
+ */
 #define AGSE_ENTERROOM       0x100
-/** Plugin event. */
+/**
+ * Triggered when the screen is about to fade in as the player changes rooms.
+ * Return 1 to suppress the engine's own screen transition.
+ *
+ * Data value: unused, currently 0.
+ * @since Interface version 6
+ */
 #define AGSE_TRANSITIONIN    0x200
-/** Plugin event. */
+/**
+ * Triggered when the screen is about to fade out as the player changes rooms.
+ * Return 1 to suppress the engine's own screen transition.
+ *
+ * Data value: unused, currently 0.
+ * @since Interface version 6
+ */
 #define AGSE_TRANSITIONOUT   0x400
-// Below are interface 12 and later
-/** Plugin event. */
+/**
+ * Triggered every frame after the mouse cursor has been painted and
+ * immediately before the frame is presented. Render-stage event.
+ * @since Interface version 12
+ */
 #define AGSE_FINALSCREENDRAW 0x800
-/** Plugin event. */
+/**
+ * Triggered whenever in-game text might need translating.
+ *
+ * Data value: the text to translate; cast it to `const char *`.
+ *
+ * Return 0 to let AGS translate the text as usual, or a `char *` pointing at
+ * replacement text. AGS does not copy that text, so it must point at memory
+ * that stays valid — static storage, or a buffer your plugin owns.
+ * @since Interface version 12
+ */
 #define AGSE_TRANSLATETEXT   0x1000
-// Below are interface 13 and later
-/** Plugin event. */
+/**
+ * Triggers AGS_EngineDebugHook every time the game script advances to a new
+ * line.
+ *
+ * Data value: not applicable.
+ * @since Interface version 13
+ */
 #define AGSE_SCRIPTDEBUG     0x2000
-// AGSE_AUDIODECODE is no longer supported
-/** Plugin event. */
+/**
+ * @deprecated No longer supported. The engine never raises this event.
+ * @since Interface version 13
+ */
 #define AGSE_AUDIODECODE     0x4000
-// Below are interface 18 and later
-/** Plugin event. */
+/**
+ * Triggered whenever a sprite is loaded into the sprite cache, letting you
+ * modify it as it arrives.
+ *
+ * Data value: the sprite number.
+ *
+ * @warning Do not access any other sprite from this event. The sprite cache
+ *          may be in an inconsistent state.
+ * @since Interface version 18
+ */
 #define AGSE_SPRITELOAD      0x8000
-// Below are interface 21 and later
-/** Plugin event. */
+/**
+ * Triggered every frame after the game logic has run but before anything is
+ * drawn. This is the first step of the render sequence.
+ *
+ * Data value: unused, currently 0.
+ * @since Interface version 21
+ */
 #define AGSE_PRERENDER       0x10000
-// Below are interface 24 and later
-/** Plugin event. */
+/**
+ * Triggered just before a save game is created, while the script engine is
+ * still working — so unlike #AGSE_SAVEGAME, you may call script functions
+ * here to prepare for the save.
+ *
+ * Data value: unused, currently 0.
+ * @since Interface version 24
+ */
 #define AGSE_PRESAVEGAME     0x20000
-/** Plugin event. */
+/**
+ * Triggered after a save game has been restored. All game data is back and
+ * the script engine is operational again, which #AGSE_RESTOREGAME cannot
+ * promise.
+ *
+ * Data value: unused, currently 0.
+ * @since Interface version 24
+ */
 #define AGSE_POSTRESTOREGAME 0x40000
-// Below are interface 26 and later
-/** Plugin event. */
+/**
+ * Triggered every frame, once per room camera, after the room contents have
+ * been drawn — letting you draw over the whole room graphic layer.
+ * Render-stage event.
+ * @since Interface version 26
+ */
 #define AGSE_POSTROOMDRAW    0x80000
-/** Plugin event. */
+/**
+ * Upper bound marker: the first bit value above all defined events. Not an
+ * event, and never passed to AGS_EngineOnEvent.
+ */
 #define AGSE_TOOHIGH         0x100000
+/** @} */
 
 /**
  * @name Log message levels
