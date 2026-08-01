@@ -2,7 +2,7 @@
 
 An editor plugin is a .NET assembly that extends the AGS Editor's UI and
 behaviour. It is never shipped with a game — anything a *game* needs at run time
-must be an [engine plugin](engine-plugins.md) instead.
+must be an [engine plugin](engine/index.html) instead.
 
 Editor plugins require AGS 3.0 or later, and can be written in any .NET
 language.

@@ -53,6 +53,18 @@ function Assert-StructFieldDoc {
 $engine = Join-Path $SitePath 'engine'
 $null = Assert-FileExists -Path (Join-Path $engine 'index.html') -Because 'Doxygen must emit a landing page'
 Assert-FileContains -Path (Join-Path $engine 'annotated.html') -Pattern 'IAGSEngine' -Because 'the run-time interface must be listed'
+
+# Doxygen owns the engine plugin narrative: its main page is the overview,
+# and the version reference is an extra page beside it.
+Assert-FileContains -Path (Join-Path $engine 'index.html') -Pattern 'AGS_EngineStartup' -Because 'the Doxygen main page must be the engine plugin overview'
+Assert-FileContains -Path (Join-Path $engine 'index.html') -Pattern 'THIS_IS_THE_PLUGIN' -Because 'the overview must explain how to get the exported declarations'
+$versionPage = Get-ChildItem -LiteralPath $engine -Filter '*engine_plugin_versions*.html' -ErrorAction SilentlyContinue | Select-Object -First 1
+if (-not $versionPage) {
+    $failures += "MISSING PAGE: no engine_plugin_versions page in $engine (check USE_MDFILE_AS_MAINPAGE and the @page label)"
+} else {
+    Assert-FileContains -Path $versionPage.FullName -Pattern 'PLUGIN_API_VERSION' -Because 'the version reference must name where the current version lives'
+    Assert-FileContains -Path $versionPage.FullName -Pattern '3.6.2.5' -Because 'the interface-to-engine version mapping must be present'
+}
 Assert-FileContains -Path (Join-Path $engine 'annotated.html') -Pattern 'IAGSStream' -Because 'the stream interface must be listed'
 Assert-FileContains -Path (Join-Path $engine 'annotated.html') -Pattern 'AGSCharacter' -Because 'plain data structs must be listed'
 
@@ -60,9 +72,6 @@ Assert-FileContains -Path (Join-Path $engine 'annotated.html') -Pattern 'AGSChar
 Assert-FileContains -Path (Join-Path $SitePath 'index.html') -Pattern 'Engine plugins' -Because 'the landing page must introduce both plugin models'
 Assert-FileContains -Path (Join-Path $SitePath 'index.html') -Pattern 'Editor plugins' -Because 'the landing page must introduce both plugin models'
 Assert-FileContains -Path (Join-Path $SitePath 'index.html') -Pattern 'two different interfaces named' -Because 'the IAGSEditor name collision must be called out'
-Assert-FileContains -Path (Join-Path $SitePath 'engine-plugins.html') -Pattern 'AGS_EngineStartup' -Because 'the native entry point must be named'
-Assert-FileContains -Path (Join-Path $SitePath 'engine-plugin-versions.html') -Pattern 'PLUGIN_API_VERSION' -Because 'the version reference must name where the current version lives'
-Assert-FileContains -Path (Join-Path $SitePath 'engine-plugin-versions.html') -Pattern '3.6.2.5' -Because 'the interface-to-engine version mapping must be present'
 Assert-FileContains -Path (Join-Path $SitePath 'editor-plugins.html') -Pattern 'IAGSEditorPlugin' -Because 'the managed entry point must be named'
 
 # --- C# (DocFX) reference ---
@@ -71,6 +80,12 @@ Assert-FileContains -Path (Join-Path $api 'AGS.Types.IAGSEditor.html') -Pattern 
 $null = Assert-FileExists   -Path (Join-Path $api 'AGS.Types.IAGSEditorPlugin.html') -Because 'the plugin entry interface must be documented'
 $null = Assert-FileExists   -Path (Join-Path $api 'AGS.Types.IEditorComponent.html') -Because 'the component interface must be documented'
 Assert-FileContains -Path (Join-Path $api 'index.html') -Pattern 'Editor Plugin API Reference' -Because 'the API reference needs its own landing page'
+
+# toc.yml must mount api/toc.yml, not link api/index.md as a leaf, or the
+# namespace and type tree never appears in the nav.
+Assert-FileContains -Path (Join-Path $api 'toc.html') -Pattern 'AGS.Types' -Because 'the generated C# toc must list the namespaces'
+Assert-FileContains -Path (Join-Path $SitePath 'toc.json') -Pattern '"includedFrom":"~/api/toc.yml"' -Because 'the root toc must mount the generated C# toc as a subtree'
+Assert-FileContains -Path (Join-Path $SitePath 'toc.json') -Pattern '"name":"IAGSEditor"' -Because 'the mounted subtree must expand to individual types, not just namespaces'
 
 # AGS.Controls vendors ScintillaNET and AddressBarExt into its own assembly.
 # filterConfig.yml must keep them out; without it they outnumber the real API.
@@ -94,7 +109,7 @@ if ($bogus -notmatch 'Build the editor first') {
 
 # --- Internal link check ---
 # Full-site scan hits DocFX template links (e.g. api/AGS.html); scan authored pages only.
-$authorPages = @('index.html', 'engine-plugins.html', 'editor-plugins.html')
+$authorPages = @('index.html', 'editor-plugins.html')
 $siteFiles = $authorPages | ForEach-Object {
     Get-Item -LiteralPath (Join-Path $SitePath $_) -ErrorAction SilentlyContinue
 }

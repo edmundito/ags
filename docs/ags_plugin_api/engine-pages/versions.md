@@ -1,11 +1,12 @@
+@page engine_plugin_versions Interface versions
+
 # Engine plugin interface versions
 
-`IAGSEngine::version` tells a plugin which interface version the running engine
-provides. Every method, event and constant in the
-[API reference](engine/index.html) is tagged with the version that introduced
-it. Check `version` before calling anything newer than the minimum your plugin
-requires — an older engine simply does not have the method, and calling it is
-undefined behaviour, not a graceful failure.
+IAGSEngine::version tells a plugin which interface version the running engine
+provides. Every method, event and constant in this reference is tagged with the
+version that introduced it. Check `version` before calling anything newer than
+the minimum your plugin requires — an older engine simply does not have the
+method, and calling it is undefined behaviour, not a graceful failure.
 
 The current version is `30`, defined as `PLUGIN_API_VERSION` in
 `Engine/plugin/agsplugin.cpp`.

@@ -10,8 +10,8 @@ Native DLLs (`ags*.dll` on Windows, `libags*.so` elsewhere) that extend what a
 ship with the game at run time. They are loaded by both the editor
 (design time) and the engine (run time).
 
-- [Engine plugin overview](engine-plugins.md)
-- [Engine plugin API reference](engine/index.html)
+- [Engine plugin API](engine/index.html) — overview, interface versions and the
+  full reference, generated from `agsplugin.h`
 
 ## Editor plugins
 

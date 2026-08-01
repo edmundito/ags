@@ -1,18 +1,16 @@
 - name: Home
   href: index.md
+# The engine plugin API is a Doxygen subsite, generated from agsplugin.h and
+# owning its own overview and version pages. It is linked, not mirrored.
 - name: Engine Plugins (C++)
-  href: engine-plugins.md
-  items:
-    - name: Overview
-      href: engine-plugins.md
-    - name: Interface Versions
-      href: engine-plugin-versions.md
-    - name: API Reference
-      href: engine/index.html
+  href: engine/index.html
 - name: Editor Plugins (.NET)
   href: editor-plugins.md
   items:
     - name: Overview
       href: editor-plugins.md
+    # Mounts the toc DocFX generates during the metadata phase, so the
+    # namespace and type tree appears in the nav. A leaf href to
+    # api/index.md would show the landing page and nothing under it.
     - name: API Reference
-      href: api/index.md
+      href: api/toc.yml
