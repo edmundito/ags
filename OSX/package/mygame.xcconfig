@@ -1,0 +1,18 @@
+// Game identity for the macOS app bundle.
+//
+// The AGS Editor rewrites this file every time it exports the project, so
+// keep hand edits somewhere else -- DEVELOPMENT_TEAM is better set in Xcode's
+// Signing & Capabilities tab, which stores it outside this file.
+
+PRODUCT_NAME = MyGame
+PRODUCT_BUNDLE_IDENTIFIER = com.mystudio.mygame
+
+// CFBundleShortVersionString, the version users see.
+MARKETING_VERSION = 1.0
+// CFBundleVersion, the build number. Must increase for each upload when
+// distributing through the App Store or TestFlight.
+CURRENT_PROJECT_VERSION = 1
+
+// Your Apple Developer Team ID, e.g. A1B2C3D4E5. Leave empty to pick the
+// team in Xcode instead.
+DEVELOPMENT_TEAM =

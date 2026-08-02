@@ -1,0 +1,403 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1B00000000000000000000A1 /* AGSKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A3 /* AGSKit.xcframework */; };
+		1B00000000000000000000A2 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A2 /* SDL2.framework */; };
+		1B00000000000000000000A3 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A2 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1B00000000000000000000A4 /* ags.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A4 /* ags.iconset */; };
+		1B00000000000000000000A5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A5 /* PrivacyInfo.xcprivacy */; };
+		1B00000000000000000000A6 /* plugin_registration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A8 /* plugin_registration.cpp */; };
+		1B00000000000000000000B0 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B0 /* AudioToolbox.framework */; };
+		1B00000000000000000000B1 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B1 /* AudioUnit.framework */; };
+		1B00000000000000000000B2 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B2 /* CoreAudio.framework */; };
+		1B00000000000000000000B3 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B3 /* CoreVideo.framework */; };
+		1B00000000000000000000B4 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B4 /* IOKit.framework */; };
+		1B00000000000000000000B5 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B5 /* OpenGL.framework */; };
+		1B00000000000000000000B6 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B6 /* AppKit.framework */; };
+		1B00000000000000000000B7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B7 /* Cocoa.framework */; };
+		1B00000000000000000000B8 /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B8 /* libz.1.tbd */; };
+		1B00000000000000000000B9 /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000B9 /* libbz2.1.0.tbd */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1D00000000000000000000A4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1B00000000000000000000A3 /* SDL2.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1A00000000000000000000A1 /* MyGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A00000000000000000000A2 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		1A00000000000000000000A3 /* AGSKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AGSKit.xcframework; path = Frameworks/AGSKit.xcframework; sourceTree = "<group>"; };
+		1A00000000000000000000A4 /* ags.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = ags.iconset; sourceTree = "<group>"; };
+		1A00000000000000000000A5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		1A00000000000000000000A6 /* mygame.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = mygame.entitlements; sourceTree = "<group>"; };
+		1A00000000000000000000A7 /* mygame_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mygame_Prefix.pch; sourceTree = "<group>"; };
+		1A00000000000000000000A8 /* plugin_registration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plugin_registration.cpp; sourceTree = "<group>"; };
+		1A00000000000000000000A9 /* plugin_registration.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = plugin_registration.hpp; sourceTree = "<group>"; };
+		1A00000000000000000000AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A00000000000000000000AB /* mygame.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = mygame.xcconfig; sourceTree = "<group>"; };
+		1A00000000000000000000AC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		1A00000000000000000000B0 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		1A00000000000000000000B1 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		1A00000000000000000000B2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		1A00000000000000000000B3 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		1A00000000000000000000B4 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		1A00000000000000000000B5 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		1A00000000000000000000B6 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		1A00000000000000000000B7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		1A00000000000000000000B8 /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
+		1A00000000000000000000B9 /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D00000000000000000000A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B00000000000000000000A1 /* AGSKit.xcframework in Frameworks */,
+				1B00000000000000000000A2 /* SDL2.framework in Frameworks */,
+				1B00000000000000000000B8 /* libz.1.tbd in Frameworks */,
+				1B00000000000000000000B9 /* libbz2.1.0.tbd in Frameworks */,
+				1B00000000000000000000B5 /* OpenGL.framework in Frameworks */,
+				1B00000000000000000000B3 /* CoreVideo.framework in Frameworks */,
+				1B00000000000000000000B1 /* AudioUnit.framework in Frameworks */,
+				1B00000000000000000000B7 /* Cocoa.framework in Frameworks */,
+				1B00000000000000000000B4 /* IOKit.framework in Frameworks */,
+				1B00000000000000000000B2 /* CoreAudio.framework in Frameworks */,
+				1B00000000000000000000B6 /* AppKit.framework in Frameworks */,
+				1B00000000000000000000B0 /* AudioToolbox.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1C00000000000000000000A1 /* MyGame */ = {
+			isa = PBXGroup;
+			children = (
+				1A00000000000000000000AC /* README.md */,
+				1A00000000000000000000AB /* mygame.xcconfig */,
+				1A00000000000000000000AA /* Info.plist */,
+				1A00000000000000000000A6 /* mygame.entitlements */,
+				1A00000000000000000000A8 /* plugin_registration.cpp */,
+				1A00000000000000000000A9 /* plugin_registration.hpp */,
+				1A00000000000000000000A7 /* mygame_Prefix.pch */,
+				1C00000000000000000000A2 /* Resources */,
+				1C00000000000000000000A3 /* Frameworks */,
+				1C00000000000000000000A4 /* Products */,
+			);
+			name = MyGame;
+			sourceTree = "<group>";
+		};
+		1C00000000000000000000A2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1A00000000000000000000A4 /* ags.iconset */,
+				1A00000000000000000000A5 /* PrivacyInfo.xcprivacy */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		1C00000000000000000000A3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1A00000000000000000000A3 /* AGSKit.xcframework */,
+				1A00000000000000000000A2 /* SDL2.framework */,
+				1A00000000000000000000B9 /* libbz2.1.0.tbd */,
+				1A00000000000000000000B8 /* libz.1.tbd */,
+				1A00000000000000000000B7 /* Cocoa.framework */,
+				1A00000000000000000000B6 /* AppKit.framework */,
+				1A00000000000000000000B5 /* OpenGL.framework */,
+				1A00000000000000000000B3 /* CoreVideo.framework */,
+				1A00000000000000000000B4 /* IOKit.framework */,
+				1A00000000000000000000B2 /* CoreAudio.framework */,
+				1A00000000000000000000B1 /* AudioUnit.framework */,
+				1A00000000000000000000B0 /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1C00000000000000000000A4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A00000000000000000000A1 /* MyGame.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1E00000000000000000000A1 /* mygame */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2100000000000000000000A1 /* Build configuration list for PBXNativeTarget "mygame" */;
+			buildPhases = (
+				1D00000000000000000000A1 /* Resources */,
+				1D00000000000000000000A2 /* Sources */,
+				1D00000000000000000000A3 /* Frameworks */,
+				1D00000000000000000000A4 /* Embed Frameworks */,
+				1D00000000000000000000A5 /* Copy Game Data */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mygame;
+			productName = mygame;
+			productReference = 1A00000000000000000000A1 /* MyGame.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1F00000000000000000000A1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = 2100000000000000000000A2 /* Build configuration list for PBXProject "mygame" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1C00000000000000000000A1 /* MyGame */;
+			productRefGroup = 1C00000000000000000000A4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1E00000000000000000000A1 /* mygame */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D00000000000000000000A1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B00000000000000000000A4 /* ags.iconset in Resources */,
+				1B00000000000000000000A5 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1D00000000000000000000A5 /* Copy Game Data */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Game Data";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Copies the game data exported by the AGS Editor into the app bundle.\n# The file names are not known ahead of time (they depend on the game's\n# name and on whether resources were split), so this copies the folder's\n# contents rather than listing files in the project.\n#\n# No --delete: Xcode's own resources land in the same destination folder.\nset -e\n\nif [ ! -d \"${SRCROOT}/Resources\" ]; then\n  echo \"error: Resources folder is missing. Put your game's data files there.\"\n  exit 1\nfi\n\nif ! ls \"${SRCROOT}/Resources/\"*.ags >/dev/null 2>&1; then\n  echo \"error: no .ags game data found in ${SRCROOT}/Resources. Copy the contents of your game's Compiled/Data folder there.\"\n  exit 1\nfi\n\nrsync -a --exclude='.DS_Store' --exclude='.gitkeep' \\\n  \"${SRCROOT}/Resources/\" \\\n  \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D00000000000000000000A2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B00000000000000000000A6 /* plugin_registration.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2000000000000000000000A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = mygame.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = mygame_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_VERSION,
+					BUILTIN_PLUGINS,
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/include";
+			};
+			name = Debug;
+		};
+		2000000000000000000000A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = mygame.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Frameworks";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = mygame_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_VERSION,
+					BUILTIN_PLUGINS,
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/include";
+			};
+			name = Release;
+		};
+		2000000000000000000000A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A00000000000000000000AB /* mygame.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2000000000000000000000A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A00000000000000000000AB /* mygame.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2100000000000000000000A1 /* Build configuration list for PBXNativeTarget "mygame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2000000000000000000000A1 /* Debug */,
+				2000000000000000000000A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2100000000000000000000A2 /* Build configuration list for PBXProject "mygame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2000000000000000000000A3 /* Debug */,
+				2000000000000000000000A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1F00000000000000000000A1 /* Project object */;
+}

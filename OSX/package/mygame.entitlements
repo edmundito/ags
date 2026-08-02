@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+	No entitlements are needed for a Developer ID build with the hardened
+	runtime. See README.md for the keys to add when submitting to the App
+	Store, and for the library validation exception needed by third party
+	plugin binaries you cannot re-sign.
+-->
+<plist version="1.0">
+<dict>
+</dict>
+</plist>
