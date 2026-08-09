@@ -2,6 +2,19 @@
 
 This port was initially done by Edward Rudd for providing Gemini Rue in a Humble Bundle when the AGS backend was Allegro 4. Currently, it uses SDL2.
 
+There are two audiences for this directory, and they use different things:
+
+- **Game authors** who want a macOS build of their game. You want `OSX/package`, the standalone Xcode project the Editor exports. See the next section.
+- **Engine developers** working on AGS itself on a Mac. You want the CMake build, or the in-place `OSX/xcode` workspace. Those are further down.
+
+## Exporting a game from the Editor
+
+The AGS Editor can produce a ready-to-open Xcode project. In the game's **General Settings**, tick `macOS` under Build Targets and build. The Editor writes the project to `Compiled/macOS/mygame`.
+
+Copy that folder to a Mac with Xcode, open `mygame.xcodeproj`, pick your signing team in **Signing & Capabilities**, then **Product > Archive**. `Compiled/macOS/mygame/README.md` walks through it in full. Nothing here needs the AGS source tree — the engine is already compiled into `AGSKit.xcframework` inside the project.
+
+The template itself lives in `OSX/package`, and `OSX/osx-build.sh` assembles it (fetches the libraries, builds `AGSKit.xcframework`, zips the result). That is what CI ships inside the Editor installer; you only run it by hand if you are working on the export machinery.
+
 ## Creating Icon Sets
 
 The unprocessed icons are available here:
@@ -20,11 +33,11 @@ When you build within the CMake build directory, it should pick these files up.
 TIP: Use `touch AGS.app` to force macOS to reload the application icon.
 
 
-## Adding resources for the game
+## Adding resources for the game (in-place builds only)
 
-After you build your game with the Editor, your own game `.ags` and additional files will be generated in the `Compiled/Data/` of your game project directory.
+This applies to the CMake and `OSX/xcode/ags` builds below, **not** to the Editor export — the exported project takes its game data from its own `Resources/` folder, which the Editor fills.
 
-In this port, all game resources are taken from `OSX/Resources`, remove the stub files that exist there and replace them with your game files taken from `Compiled/Data/`.
+After you build your game with the Editor, your own game `.ags` and additional files are generated in `Compiled/Data/` of your game project directory. The in-place builds take all game resources from `OSX/Resources`: remove the stub files there and replace them with your files from `Compiled/Data/`.
 
 
 ## Building with CMake
@@ -68,9 +81,9 @@ This will build the executable `AGS.app` in `the build_Release/` directory. The 
 - `Resources/`, the directory where your game and its resources, including the icon, are placed.
 
 
-## Using the Xcode project
+## Using the in-place Xcode workspace (engine developers)
 
-**NOTE:** Prefer the CMake generated project.
+**NOTE:** This is the engine developer's workflow against `OSX/xcode/ags.xcworkspace`, distinct from the `OSX/package` project the Editor exports. If you just want a macOS build of your game, use the Editor export above. Prefer the CMake generated project over this workspace.
 
 The Xcode project depends on the prebuilt SDL2 Framework and library sources.
 
