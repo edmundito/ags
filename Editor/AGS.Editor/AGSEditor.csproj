@@ -127,6 +127,7 @@
     <Compile Include="Audio\AudioController.cs" />
     <Compile Include="BuildTargets\BuildTargetWeb.cs" />
     <Compile Include="BuildTargets\BuildTargetAndroid.cs" />
+    <Compile Include="BuildTargets\BuildTargetMacOS.cs" />
     <Compile Include="ColorThemes\ColorTheme.cs" />
     <Compile Include="ColorThemes\ColorThemes.cs" />
     <Compile Include="ColorThemes\ColorThemeJson.cs" />

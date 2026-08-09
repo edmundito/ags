@@ -229,6 +229,7 @@ namespace AGS.Editor
             BuildTargetsInfo.RegisterBuildTarget(new BuildTargetLinux());
             BuildTargetsInfo.RegisterBuildTarget(new BuildTargetWeb());
             BuildTargetsInfo.RegisterBuildTarget(new BuildTargetAndroid());
+            BuildTargetsInfo.RegisterBuildTarget(new BuildTargetMacOS());
         }
 
         public Game CurrentGame
