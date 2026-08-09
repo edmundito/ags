@@ -31,6 +31,8 @@ namespace AGS.Types
         public const string PROPERTY_ANDROID_APPLICATION_ID = "App ID";
         public const string PROPERTY_ANDROID_APP_VERSION_CODE = "App Version Code";
         public const string PROPERTY_ANDROID_APP_VERSION_NAME = "App Version Name";
+        public const string PROPERTY_MACOS_BUNDLE_ID = "Bundle Identifier";
+        public const string PROPERTY_MACOS_APP_VERSION = "App Version";
 
 		private const string DEFAULT_GENRE = "Adventure";
         private const string DEFAULT_VERSION = "1.0.0.0";
@@ -133,6 +135,8 @@ namespace AGS.Types
         private int _androidAppVersionCode = 1;
         private string _androidAppVersionName = DEFAULT_VERSION;
         private AndroidBuildFormat _androidBuildFormat = AndroidBuildFormat.ApkEmbedded;
+        private string _macOSBundleIdentifier = "com.mystudio.mygame";
+        private string _macOSAppVersion = "1.0";
         private string _translationIncludeScriptPrefix = string.Empty;
         private string _translationExcludeScriptPrefix = string.Empty;
         private string _translationExcludeFunctionCall = string.Empty;
@@ -1360,6 +1364,44 @@ namespace AGS.Types
         {
             get { return _androidBuildFormat; }
             set { _androidBuildFormat = value; }
+        }
+
+        [DisplayName(PROPERTY_MACOS_BUNDLE_ID)]
+        [Description("The bundle identifier for the macOS app, in reverse-DNS form such as com.mystudio.mygame. It becomes CFBundleIdentifier and PRODUCT_BUNDLE_IDENTIFIER in the exported Xcode project. It must have at least two segments (one or more dots).")]
+        [Category("macOS")]
+        [DefaultValue("com.mystudio.mygame")]
+        public string MacOSBundleIdentifier
+        {
+            get { return _macOSBundleIdentifier; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Bundle identifier cannot be empty");
+                }
+                if (!Regex.IsMatch(value, @"^([a-zA-Z0-9\.\ ]+)$"))
+                {
+                    throw new ArgumentException("Bundle identifier can only contain letters, numbers and dots.");
+                }
+                _macOSBundleIdentifier = value.Replace(" ", "").ToLower().Trim();
+            }
+        }
+
+        [DisplayName(PROPERTY_MACOS_APP_VERSION)]
+        [Description("The version string shown in the macOS app bundle (CFBundleShortVersionString / MARKETING_VERSION), such as 1.0 or 2.3.1.")]
+        [Category("macOS")]
+        [DefaultValue("1.0")]
+        public string MacOSAppVersion
+        {
+            get { return _macOSAppVersion; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("App version cannot be empty");
+                }
+                _macOSAppVersion = value.Trim();
+            }
         }
 
         [Obsolete]
