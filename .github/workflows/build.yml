@@ -231,6 +231,28 @@ jobs:
           name: ags-bundle-android
           path: AGS-*-android-proj-*.zip
 
+  build-macos-bundle:
+    name: macOS Bundle
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Prepare macOS build
+        run: cd OSX && ./osx-build.sh prepare
+
+      - name: Build AGSKit framework
+        run: cd OSX && ./osx-build.sh build_release
+
+      - name: Create project archive
+        run: cd OSX && ./osx-build.sh archive_project
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ags-bundle-macos
+          path: AGS-*-macos-proj.zip
+
   windows-deps:
     name: Windows Dependencies
     runs-on: windows-2022
