@@ -37,4 +37,4 @@ done
 cd ..
 xattr -dr com.apple.quarantine . 2>/dev/null || true
 
-echo "frameworks ready - open mygame.xcodeproj and build"
+echo "frameworks ready - open AGSGame.xcodeproj and build"

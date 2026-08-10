@@ -9,13 +9,38 @@ namespace AGS.Editor
     public class BuildTargetMacOS : BuildTargetBase
     {
         public const string MACOS_DIR = "macOS";
-        public const string MACOS_PROJECT_DIR = "mygame";
         public const string MACOS_RESOURCES_DIR = "Resources";
-        public const string MACOS_XCCONFIG_NAME = "mygame.xcconfig";
+
+        // The name every file and identifier in the shipped template carries.
+        // On export it is swapped for the game's own name (see GetProjectName).
+        public const string MACOS_TEMPLATE_BASE = "AGSGame";
 
         private string GetEditorMacOSTemplateDir()
         {
             return Path.Combine(Factory.AGSEditor.EditorDirectory, MACOS_DIR);
+        }
+
+        /// <summary>
+        /// The base name used for the exported project's folder, .xcodeproj,
+        /// .xcconfig, .entitlements, prefix header and scheme. Derived from the
+        /// game's file name so the project is recognisable, and reduced to
+        /// letters and digits so it needs no quoting inside project.pbxproj.
+        /// Falls back to the template's own name when nothing usable is set.
+        /// </summary>
+        public static string GetProjectName(string baseGameFileName)
+        {
+            if (string.IsNullOrEmpty(baseGameFileName)) return MACOS_TEMPLATE_BASE;
+            StringBuilder sb = new StringBuilder(baseGameFileName.Length);
+            foreach (char c in baseGameFileName)
+            {
+                if (c < 128 && char.IsLetterOrDigit(c)) sb.Append(c);
+            }
+            return sb.Length > 0 ? sb.ToString() : MACOS_TEMPLATE_BASE;
+        }
+
+        private string GetProjectName()
+        {
+            return GetProjectName(Factory.AGSEditor.BaseGameFileName);
         }
 
         /// <summary>
@@ -34,8 +59,8 @@ namespace AGS.Editor
             // probe looks for the archives, not the unpacked frameworks.
             string[] probes =
             {
-                Path.Combine("mygame.xcodeproj", "project.pbxproj"),
-                MACOS_XCCONFIG_NAME,
+                Path.Combine(MACOS_TEMPLATE_BASE + ".xcodeproj", "project.pbxproj"),
+                MACOS_TEMPLATE_BASE + ".xcconfig",
                 Path.Combine("Frameworks", "AGSKit.xcframework.zip"),
                 Path.Combine("Frameworks", "SDL2.framework.zip"),
             };
@@ -50,13 +75,13 @@ namespace AGS.Editor
         {
             return new string[]
             {
-                GetCompiledPath(MACOS_PROJECT_DIR, MACOS_RESOURCES_DIR)
+                GetCompiledPath(GetProjectName(), MACOS_RESOURCES_DIR)
             };
         }
 
         public override void DeleteMainGameData(string name, CompileMessages errors)
         {
-            string resourcesDir = Path.Combine(Path.Combine(OutputDirectoryFullPath, MACOS_PROJECT_DIR),
+            string resourcesDir = Path.Combine(Path.Combine(OutputDirectoryFullPath, GetProjectName()),
                 MACOS_RESOURCES_DIR);
             DeleteCommonGameFiles(resourcesDir, name, errors);
         }
@@ -87,7 +112,7 @@ DEVELOPMENT_TEAM =
         /// folder, which only holds a placeholder and is filled with game data
         /// afterwards.
         /// </summary>
-        private void CopyTemplate(string templateDir, CompileMessages errors)
+        private void CopyTemplate(string templateDir, string projectDir)
         {
             string resourcesPrefix = MACOS_RESOURCES_DIR + Path.DirectorySeparatorChar;
             foreach (string sourceFile in Directory.GetFiles(templateDir, "*", SearchOption.AllDirectories))
@@ -96,10 +121,52 @@ DEVELOPMENT_TEAM =
                 if (relative.StartsWith(resourcesPrefix, StringComparison.OrdinalIgnoreCase))
                     continue; // don't copy the placeholder Resources content
 
-                string destFile = GetCompiledPath(MACOS_PROJECT_DIR, relative);
+                string destFile = GetCompiledPath(projectDir, relative);
                 string destDir = Path.GetDirectoryName(Utilities.ResolveSourcePath(destFile));
                 if (!Directory.Exists(destDir)) Directory.CreateDirectory(destDir);
                 File.Copy(Utilities.ResolveSourcePath(sourceFile), Utilities.ResolveSourcePath(destFile), true);
+            }
+        }
+
+        /// <summary>
+        /// Renames the template's placeholder-named files to the game's project
+        /// name and rewrites the placeholder token wherever it appears inside
+        /// the text files (project, scheme, prefix header, README).
+        /// </summary>
+        private void RenameTemplateToProject(string projectDir, string projectName)
+        {
+            if (projectName == MACOS_TEMPLATE_BASE) return;
+
+            string root = Utilities.ResolveSourcePath(GetCompiledPath(projectDir));
+            string oldProj = Path.Combine(root, MACOS_TEMPLATE_BASE + ".xcodeproj");
+            string newProj = Path.Combine(root, projectName + ".xcodeproj");
+
+            // Rename the scheme inside the project bundle before the .xcodeproj itself.
+            string schemeDir = Path.Combine(oldProj, "xcshareddata", "xcschemes");
+            string oldScheme = Path.Combine(schemeDir, MACOS_TEMPLATE_BASE + ".xcscheme");
+            string newScheme = Path.Combine(schemeDir, projectName + ".xcscheme");
+            if (File.Exists(oldScheme)) File.Move(oldScheme, newScheme);
+            if (Directory.Exists(oldProj)) Directory.Move(oldProj, newProj);
+
+            foreach (string ext in new string[] { ".xcconfig", ".entitlements", "-Prefix.pch" })
+            {
+                string oldFile = Path.Combine(root, MACOS_TEMPLATE_BASE + ext);
+                string newFile = Path.Combine(root, projectName + ext);
+                if (File.Exists(oldFile)) File.Move(oldFile, newFile);
+            }
+
+            string[] textFiles =
+            {
+                Path.Combine(newProj, "project.pbxproj"),
+                Path.Combine(newProj, "xcshareddata", "xcschemes", projectName + ".xcscheme"),
+                Path.Combine(root, projectName + "-Prefix.pch"),
+                Path.Combine(root, "README.md"),
+            };
+            foreach (string file in textFiles)
+            {
+                if (!File.Exists(file)) continue;
+                string text = File.ReadAllText(file);
+                File.WriteAllText(file, text.Replace(MACOS_TEMPLATE_BASE, projectName));
             }
         }
 
@@ -119,9 +186,12 @@ DEVELOPMENT_TEAM =
             if (!base.Build(errors, forceRebuild)) return false;
             WarnAboutPlugins(errors);
 
-            CopyTemplate(GetEditorMacOSTemplateDir(), errors);
+            string projectDir = GetProjectName();
 
-            string resourcesDir = GetCompiledPath(MACOS_PROJECT_DIR, MACOS_RESOURCES_DIR);
+            CopyTemplate(GetEditorMacOSTemplateDir(), projectDir);
+            RenameTemplateToProject(projectDir, projectDir);
+
+            string resourcesDir = GetCompiledPath(projectDir, MACOS_RESOURCES_DIR);
             if (!Directory.Exists(Utilities.ResolveSourcePath(resourcesDir)))
                 Directory.CreateDirectory(Utilities.ResolveSourcePath(resourcesDir));
 
@@ -143,12 +213,12 @@ DEVELOPMENT_TEAM =
             // Overwrite the template xcconfig with the game's identity
             Settings settings = Factory.AGSEditor.CurrentGame.Settings;
             string xcconfig = BuildXCConfigText(settings.GameName, settings.MacOSBundleIdentifier, settings.MacOSAppVersion);
-            string xcconfigPath = Utilities.ResolveSourcePath(GetCompiledPath(MACOS_PROJECT_DIR, MACOS_XCCONFIG_NAME));
+            string xcconfigPath = Utilities.ResolveSourcePath(GetCompiledPath(projectDir, projectDir + ".xcconfig"));
             File.WriteAllBytes(xcconfigPath, Encoding.UTF8.GetBytes(xcconfig));
 
             errors.Add(new CompileWarning("macOS: Xcode project written to " +
-                GetCompiledPath(MACOS_PROJECT_DIR) +
-                ". Copy it to a Mac, open mygame.xcodeproj, choose your signing team, then Product > Archive."));
+                GetCompiledPath(projectDir) +
+                ". Copy it to a Mac, open " + projectDir + ".xcodeproj, choose your signing team, then Product > Archive."));
             return true;
         }
 

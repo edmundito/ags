@@ -28,8 +28,8 @@ source and you do not need the AGS source tree.
    resource files, `audio.vox`, `speech.vox` and `acsetup.cfg`. Do not copy
    `winsetup.exe` or any `.dll`, which are Windows-only.
 
-4. Open `mygame.xcodeproj` and set your game's identity. The Editor writes
-   `mygame.xcconfig` for you; if you are doing this by hand, edit that file
+4. Open `AGSGame.xcodeproj` and set your game's identity. The Editor writes
+   `AGSGame.xcconfig` for you; if you are doing this by hand, edit that file
    and set `PRODUCT_NAME`, `PRODUCT_BUNDLE_IDENTIFIER` and
    `MARKETING_VERSION`. Then pick your team under the target's
    **Signing & Capabilities** tab.
@@ -53,7 +53,7 @@ and pixel sizes exactly as they are, and Xcode compiles them into the bundle's
 
 ## Signing and entitlements
 
-`mygame.entitlements` disables **library validation**:
+`AGSGame.entitlements` disables **library validation**:
 
 ```xml
 <key>com.apple.security.cs.disable-library-validation</key>
@@ -73,7 +73,7 @@ any plugin dylibs) with your own identity, then add the sandbox:
 
 ```sh
 codesign --force --sign "Developer ID Application: Your Name (TEAMID)" \
-  MyGame.app/Contents/Frameworks/SDL2.framework
+  AGSGame.app/Contents/Frameworks/SDL2.framework
 ```
 
 ```xml
@@ -103,10 +103,10 @@ search path.
 
 | Path | What it is |
 | --- | --- |
-| `mygame.xcodeproj` | The Xcode project. One target, `mygame`. |
-| `mygame.xcconfig` | Game name, bundle id and version. Rewritten by the Editor. |
+| `AGSGame.xcodeproj` | The Xcode project. One target, `AGSGame`. |
+| `AGSGame.xcconfig` | Game name, bundle id and version. Rewritten by the Editor. |
 | `Info.plist` | Bundle metadata. Reads its values from the build settings above. |
-| `mygame.entitlements` | Disables library validation so the prebuilt SDL2 loads. See above. |
+| `AGSGame.entitlements` | Disables library validation so the prebuilt SDL2 loads. See above. |
 | `Frameworks/AGSKit.xcframework` | The AGS engine, prebuilt for Intel and Apple Silicon. |
 | `Frameworks/SDL2.framework` | SDL2, embedded into the bundle and re-signed on copy. |
 | `Resources/` | Your game's data files. |

@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'mygame' target
+// Prefix header for all source files of the 'AGSGame' target
 //
 
 #import <Availability.h>

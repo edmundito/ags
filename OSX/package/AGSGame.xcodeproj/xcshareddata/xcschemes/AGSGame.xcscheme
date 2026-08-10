@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1E00000000000000000000A1"
-               BuildableName = "MyGame.app"
-               BlueprintName = "mygame"
-               ReferencedContainer = "container:mygame.xcodeproj">
+               BuildableName = "AGSGame.app"
+               BlueprintName = "AGSGame"
+               ReferencedContainer = "container:AGSGame.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1E00000000000000000000A1"
-            BuildableName = "MyGame.app"
-            BlueprintName = "mygame"
-            ReferencedContainer = "container:mygame.xcodeproj">
+            BuildableName = "AGSGame.app"
+            BlueprintName = "AGSGame"
+            ReferencedContainer = "container:AGSGame.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1E00000000000000000000A1"
-            BuildableName = "MyGame.app"
-            BlueprintName = "mygame"
-            ReferencedContainer = "container:mygame.xcodeproj">
+            BuildableName = "AGSGame.app"
+            BlueprintName = "AGSGame"
+            ReferencedContainer = "container:AGSGame.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

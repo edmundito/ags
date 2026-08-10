@@ -4,7 +4,7 @@
 // keep hand edits somewhere else -- DEVELOPMENT_TEAM is better set in Xcode's
 // Signing & Capabilities tab, which stores it outside this file.
 
-PRODUCT_NAME = MyGame
+PRODUCT_NAME = AGSGame
 PRODUCT_BUNDLE_IDENTIFIER = com.mystudio.mygame
 
 // CFBundleShortVersionString, the version users see.
