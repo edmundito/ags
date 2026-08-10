@@ -87,6 +87,12 @@ function build_release_framework {
     exit 1
   fi
 
+  # Make sure the SDL2 framework is staged in the template. prepare puts it
+  # here too, but a repeated build_release finds it already zipped away, so
+  # refresh it to keep this step runnable on its own.
+  rm -rf "${PACKAGE_DIR}/Frameworks/SDL2.framework"
+  cp -R "${LIBSRC_DIR}/SDL2.framework" "${PACKAGE_DIR}/Frameworks/"
+
   rm -rf "${BUILD_DIR}"
   xcodebuild -project xcode/AGSKit/AGSKit.xcodeproj \
     -scheme AGSKit \
@@ -137,8 +143,8 @@ function create_proj_archive {
   pushd "${SCRIPT_DIR}"
   version=$(ags_version)
 
-  if [[ ! -d "${PACKAGE_DIR}/Frameworks/AGSKit.xcframework" ]]; then
-    echo "error: package/Frameworks/AGSKit.xcframework is missing, run 'osx-build.sh build_release' first." >&2
+  if [[ ! -f "${PACKAGE_DIR}/Frameworks/AGSKit.xcframework.zip" ]]; then
+    echo "error: package/Frameworks/AGSKit.xcframework.zip is missing, run 'osx-build.sh build_release' first." >&2
     exit 1
   fi
 
