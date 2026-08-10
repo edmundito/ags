@@ -253,6 +253,17 @@ jobs:
           name: ags-bundle-macos
           path: AGS-*-macos-proj.zip
 
+      - name: Build prebuilt app
+        run: cd OSX && ./osx-build.sh build_app
+
+      - name: Create app archive
+        run: cd OSX && ./osx-build.sh archive_app
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ags-bundle-macos-app
+          path: AGS-*-macos-app.zip
+
   windows-deps:
     name: Windows Dependencies
     runs-on: windows-2022
@@ -861,10 +872,24 @@ jobs:
       - name: Extract macOS project
         shell: cmd
         run: |
+          mkdir Windows\Installer\Source\macOS-project
+          call Script\setvar.cmd ACI_VERSION_STR
+          tar -f _macos_tmp\AGS-%ACI_VERSION_STR%-macos-proj.zip -xvzC Windows\Installer\Source\macOS-project
+          rd /s /q _macos_tmp
+
+      - name: Download macOS app archive
+        uses: actions/download-artifact@v8
+        with:
+          name: ags-bundle-macos-app
+          path: _macosapp_tmp
+
+      - name: Extract macOS app
+        shell: cmd
+        run: |
           mkdir Windows\Installer\Source\macOS
           call Script\setvar.cmd ACI_VERSION_STR
-          tar -f _macos_tmp\AGS-%ACI_VERSION_STR%-macos-proj.zip -xvzC Windows\Installer\Source\macOS
-          rd /s /q _macos_tmp
+          tar -f _macosapp_tmp\AGS-%ACI_VERSION_STR%-macos-app.zip -xvzC Windows\Installer\Source\macOS
+          rd /s /q _macosapp_tmp
 
       - name: Download Demo game
         shell: cmd
@@ -900,6 +925,7 @@ jobs:
           move Windows\Installer\Source\Web       Windows\Installer\Source\Editor\
           move Windows\Installer\Source\Android   Windows\Installer\Source\Editor\
           move Windows\Installer\Source\macOS     Windows\Installer\Source\Editor\
+          move Windows\Installer\Source\macOS-project Windows\Installer\Source\Editor\
           move Windows\Installer\Source\Templates Windows\Installer\Source\Editor\
           move Windows\Installer\Source\URLs Windows\Installer\Source\Editor\
           for %%f in (Windows\Installer\Output\*.exe) do tar -f %%~nf.zip -acv --strip-components 4 Windows\Installer\Source\Editor
@@ -1013,6 +1039,12 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: ags-bundle-macos
+          path: /tmp/github_release
+
+      - name: Download macOS app bundle
+        uses: actions/download-artifact@v8
+        with:
+          name: ags-bundle-macos-app
           path: /tmp/github_release
 
       - name: Generate SHA-256 checksums
