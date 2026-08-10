@@ -756,6 +756,7 @@ jobs:
     needs:
       - build-emscripten-bundle
       - build-android-bundle
+      - build-macos-bundle
       - build-linux-bundle
       - windows-deps
       - windows-msvc-editor
@@ -851,6 +852,20 @@ jobs:
           tar -f _android_tmp\AGS-%ACI_VERSION_STR%-android-proj-release.zip -xvzC Windows\Installer\Source\Android
           rd /s /q _android_tmp
 
+      - name: Download macOS project archive
+        uses: actions/download-artifact@v8
+        with:
+          name: ags-bundle-macos
+          path: _macos_tmp
+
+      - name: Extract macOS project
+        shell: cmd
+        run: |
+          mkdir Windows\Installer\Source\macOS
+          call Script\setvar.cmd ACI_VERSION_STR
+          tar -f _macos_tmp\AGS-%ACI_VERSION_STR%-macos-proj.zip -xvzC Windows\Installer\Source\macOS
+          rd /s /q _macos_tmp
+
       - name: Download Demo game
         shell: cmd
         run: |
@@ -884,6 +899,7 @@ jobs:
           move Windows\Installer\Source\Linux     Windows\Installer\Source\Editor\
           move Windows\Installer\Source\Web       Windows\Installer\Source\Editor\
           move Windows\Installer\Source\Android   Windows\Installer\Source\Editor\
+          move Windows\Installer\Source\macOS     Windows\Installer\Source\Editor\
           move Windows\Installer\Source\Templates Windows\Installer\Source\Editor\
           move Windows\Installer\Source\URLs Windows\Installer\Source\Editor\
           for %%f in (Windows\Installer\Output\*.exe) do tar -f %%~nf.zip -acv --strip-components 4 Windows\Installer\Source\Editor
@@ -902,6 +918,7 @@ jobs:
     needs:
       - build-emscripten-bundle
       - build-android-bundle
+      - build-macos-bundle
       - build-linux-bundle
       - windows-packaging
       - package-pdbs
@@ -990,6 +1007,12 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: ags-bundle-android
+          path: /tmp/github_release
+
+      - name: Download macOS project bundle
+        uses: actions/download-artifact@v8
+        with:
+          name: ags-bundle-macos
           path: /tmp/github_release
 
       - name: Generate SHA-256 checksums

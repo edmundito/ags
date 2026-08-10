@@ -59,6 +59,7 @@ ComponentEngineDefault=Runtime engine for MS Windows
 ComponentLinuxBuild=Linux build component
 ComponentWebBuild=Web build component
 ComponentAndroidBuild=Android build component
+ComponentMacOSBuild=macOS build component
 ComponentDemoGame=Demo Game ("AGS Quest")
 InstallOptions=Install options
 InstallVCRedist=Install {#VcRedistName}
@@ -73,6 +74,7 @@ Name: "engine\default"; Description: "{cm:ComponentEngineDefault}"; Types: full 
 Name: "linux"; Description: "{cm:ComponentLinuxBuild}"; Types: full custom
 Name: "web"; Description: "{cm:ComponentWebBuild}"; Types: full custom
 Name: "android"; Description: "{cm:ComponentAndroidBuild}"; Types: full custom
+Name: "macos"; Description: "{cm:ComponentMacOSBuild}"; Types: full custom
 Name: "demogame"; Description: "{cm:ComponentDemoGame}"; Types: full custom
 
 
@@ -129,6 +131,8 @@ Source: "Source\Android\mygame\*"; DestDir: "{app}\Android\mygame"; Flags: ignor
 Source: "Source\Android\gradle\*"; DestDir: "{app}\Android\gradle"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: android
 Source: "Source\Android\library\*"; DestDir: "{app}\Android\library"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: android
 Source: "Source\Android\plugins\*"; DestDir: "{app}\Android\plugins"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: android
+; macOS build components
+Source: "Source\macOS\*"; DestDir: "{app}\macOS"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: macos
 ; Demo game
 Source: "Source\AGSQuest\*"; DestDir: "{code:GetDemoGameDir}"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist; Components: demogame
 ; Visual C++ runtime
