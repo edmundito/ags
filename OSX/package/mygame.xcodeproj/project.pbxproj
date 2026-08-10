@@ -147,6 +147,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2100000000000000000000A1 /* Build configuration list for PBXNativeTarget "mygame" */;
 			buildPhases = (
+				1D00000000000000000000A6 /* Unpack Frameworks */,
 				1D00000000000000000000A1 /* Resources */,
 				1D00000000000000000000A2 /* Sources */,
 				1D00000000000000000000A3 /* Frameworks */,
@@ -201,6 +202,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1D00000000000000000000A6 /* Unpack Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Unpack Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# The frameworks ship as .zip archives so their internal symlinks\n# survive being copied on Windows by the AGS Editor. Unpack them here,\n# before linking, restoring the symlinks with ditto.\nset -e\ncd \"${SRCROOT}/Frameworks\"\nfor zip in *.zip; do\n  [ -e \"$zip\" ] || continue\n  name=\"${zip%.zip}\"\n  if [ ! -e \"$name\" ]; then\n    echo \"unpacking $name\"\n    ditto -x -k \"$zip\" .\n  fi\ndone\n";
+		};
 		1D00000000000000000000A5 /* Copy Game Data */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;

@@ -29,12 +29,15 @@ namespace AGS.Editor
         {
             Dictionary<string, string> paths = new Dictionary<string, string>();
             string templateDir = GetEditorMacOSTemplateDir();
+            // Frameworks ship as .zip archives (see osx-build.sh) so their
+            // internal symlinks survive being copied here on Windows, so the
+            // probe looks for the archives, not the unpacked frameworks.
             string[] probes =
             {
                 Path.Combine("mygame.xcodeproj", "project.pbxproj"),
                 MACOS_XCCONFIG_NAME,
-                Path.Combine("Frameworks", "AGSKit.xcframework", "Info.plist"),
-                Path.Combine("Frameworks", "SDL2.framework", "SDL2"),
+                Path.Combine("Frameworks", "AGSKit.xcframework.zip"),
+                Path.Combine("Frameworks", "SDL2.framework.zip"),
             };
             foreach (string probe in probes)
             {

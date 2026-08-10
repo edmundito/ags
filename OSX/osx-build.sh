@@ -105,8 +105,30 @@ function build_release_framework {
     -framework "${BUILD_DIR}/dd/Build/Products/Release/AGSKit.framework" \
     -output "${PACKAGE_DIR}/Frameworks/AGSKit.xcframework"
 
+  pack_frameworks
+
   popd
   echo "done!"
+}
+
+# Frameworks are stored in the template as zip archives, not as loose
+# directories. A macOS framework relies on internal symlinks (SDL2 ->
+# Versions/Current/SDL2 and so on), and those symlinks do not survive being
+# unpacked on Windows and copied file-by-file by the Editor. Shipping the
+# frameworks zipped keeps them opaque until they reach the Mac, where the
+# Xcode project (or unpack-frameworks.sh) restores them with their symlinks
+# intact. ditto is used because it preserves symlinks and resource forks.
+function pack_frameworks {
+  set -e
+  pushd "${PACKAGE_DIR}/Frameworks"
+  for fw in SDL2.framework AGSKit.xcframework; do
+    if [[ -d "${fw}" ]]; then
+      rm -f "${fw}.zip"
+      ditto -c -k --keepParent "${fw}" "${fw}.zip"
+      rm -rf "${fw}"
+    fi
+  done
+  popd
 }
 
 function create_proj_archive {

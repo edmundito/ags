@@ -14,6 +14,11 @@ source and you do not need the AGS source tree.
    resource files, `audio.vox`, `speech.vox` and `acsetup.cfg`. Do not copy
    `winsetup.exe` or any `.dll`, which are Windows-only.
 
+   The frameworks in `Frameworks/` ship as `.zip` archives, because a macOS
+   framework's internal symlinks do not survive the Windows machine the Editor
+   runs on. Xcode unpacks them automatically on the first build; to unpack
+   them by hand, run `./unpack-frameworks.sh`.
+
 3. Open `mygame.xcodeproj` and set your game's identity. The Editor writes
    `mygame.xcconfig` for you; if you are doing this by hand, edit that file
    and set `PRODUCT_NAME`, `PRODUCT_BUNDLE_IDENTIFIER` and

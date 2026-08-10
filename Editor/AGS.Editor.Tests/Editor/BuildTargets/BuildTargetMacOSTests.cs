@@ -42,8 +42,8 @@ namespace AGS.Editor.BuildTargets
 
             Assert.That(names, Has.Some.EqualTo(System.IO.Path.Combine("mygame.xcodeproj", "project.pbxproj")));
             Assert.That(names, Has.Some.EqualTo("mygame.xcconfig"));
-            Assert.That(names, Has.Some.EqualTo(System.IO.Path.Combine("Frameworks", "AGSKit.xcframework", "Info.plist")));
-            Assert.That(names, Has.Some.EqualTo(System.IO.Path.Combine("Frameworks", "SDL2.framework", "SDL2")));
+            Assert.That(names, Has.Some.EqualTo(System.IO.Path.Combine("Frameworks", "AGSKit.xcframework.zip")));
+            Assert.That(names, Has.Some.EqualTo(System.IO.Path.Combine("Frameworks", "SDL2.framework.zip")));
         }
     }
 }
