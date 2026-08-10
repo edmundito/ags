@@ -165,6 +165,7 @@ function build_app {
     ARCHS="x86_64 arm64" \
     ONLY_ACTIVE_ARCH=NO \
     CODE_SIGNING_ALLOWED=NO \
+    AGS_TEMPLATE_BUILD=YES \
     build
 
   local app="${appbuild}/dd/Build/Products/Release/AGSGame.app"
