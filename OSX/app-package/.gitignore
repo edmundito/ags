@@ -1,0 +1,8 @@
+# The prebuilt app is produced by CI (osx-build.sh build_app), not committed.
+/AGSGame.app.zip
+# Assembled/signed output when testing locally on a Mac.
+/*.app
+/game.env
+/Resources/
+/signing.env
+/icon.png

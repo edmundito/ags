@@ -137,6 +137,66 @@ function pack_frameworks {
   popd
 }
 
+function build_app {
+  set -e
+  require_macos
+  echo "building AGSGame.app..."
+  pushd "${SCRIPT_DIR}"
+
+  # The package project links these; build_release must have produced them.
+  if [[ ! -f "${PACKAGE_DIR}/Frameworks/AGSKit.xcframework.zip" ]]; then
+    echo "error: run 'osx-build.sh build_release' first." >&2
+    exit 1
+  fi
+
+  # Unzip the frameworks so xcodebuild can link against them (build_release
+  # leaves them zipped for the Windows Editor).
+  ( cd "${PACKAGE_DIR}/Frameworks"
+    for fw in SDL2.framework.zip AGSKit.xcframework.zip; do
+      [[ -e "${fw}" ]] && { rm -rf "${fw%.zip}"; ditto -x -k "${fw}" .; }
+    done )
+
+  local appbuild="${SCRIPT_DIR}/app-build"
+  rm -rf "${appbuild}"
+  xcodebuild -project "${PACKAGE_DIR}/AGSGame.xcodeproj" \
+    -scheme AGSGame \
+    -configuration Release \
+    -derivedDataPath "${appbuild}/dd" \
+    ARCHS="x86_64 arm64" \
+    ONLY_ACTIVE_ARCH=NO \
+    CODE_SIGNING_ALLOWED=NO \
+    build
+
+  local app="${appbuild}/dd/Build/Products/Release/AGSGame.app"
+  [[ -d "${app}" ]] || { echo "error: AGSGame.app not produced." >&2; exit 1; }
+
+  # Ship the app zipped so its internal symlinks survive the Windows Editor;
+  # sign.sh restores them with ditto on the Mac. See OSX/app-package/.
+  mkdir -p "${SCRIPT_DIR}/app-package"
+  rm -f "${SCRIPT_DIR}/app-package/AGSGame.app.zip"
+  ditto -c -k --keepParent "${app}" "${SCRIPT_DIR}/app-package/AGSGame.app.zip"
+  rm -rf "${appbuild}"
+
+  popd
+  echo "done!"
+}
+
+function create_app_archive {
+  set -e
+  echo "creating app archive..."
+  pushd "${SCRIPT_DIR}"
+  version=$(ags_version)
+
+  if [[ ! -f "${SCRIPT_DIR}/app-package/AGSGame.app.zip" ]]; then
+    echo "error: app-package/AGSGame.app.zip is missing, run 'osx-build.sh build_app' first." >&2
+    exit 1
+  fi
+
+  ${TAR_CMD} -f "../AGS-${version}-macos-app.zip" -acv --strip-components 1 app-package
+  popd
+  echo "done!"
+}
+
 function create_proj_archive {
   set -e
   echo "creating project archive..."
@@ -170,6 +230,9 @@ function usage
    echo "  build_release    builds AGSKit universal and wraps it as an"
    echo "                   xcframework inside the template"
    echo "  archive_project  zips the template as AGS-<version>-macos-proj.zip"
+   echo "  build_app        builds the prebuilt AGSGame.app and stages it,"
+   echo "                   zipped, into the app-bundle template"
+   echo "  archive_app      zips the app template as AGS-<version>-macos-app.zip"
    echo "  -h --help  prints this message."
    echo
 }
@@ -189,6 +252,12 @@ while : ; do
        shift 1 ;;
     archive_project)
        create_proj_archive
+       shift 1 ;;
+    build_app)
+       build_app
+       shift 1 ;;
+    archive_app)
+       create_app_archive
        shift 1 ;;
     -h|--help)
        usage
