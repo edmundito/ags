@@ -33,4 +33,8 @@ for zip in *.zip; do
     ditto -x -k "$zip" .
 done
 
+# Clear quarantine again, now that the frameworks the zips carried are on disk.
+cd ..
+xattr -dr com.apple.quarantine . 2>/dev/null || true
+
 echo "frameworks ready - open mygame.xcodeproj and build"

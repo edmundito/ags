@@ -38,7 +38,11 @@ source and you do not need the AGS source tree.
    the App Store choose *Developer ID*, which signs and notarizes the app so
    macOS will open it on other people's machines.
 
-To check your work before archiving, just **Product > Run**.
+To check your work before archiving, just **Product > Run**. The shared scheme
+already turns off Xcode's document-versions debug flag; without that, Xcode
+passes `-NSDocumentRevisionsDebugMode YES` on launch and the engine mistakes
+the trailing `YES` for a game path ("Unable to determine game data"). The built
+`.app` is unaffected either way.
 
 ## Replacing the icon
 

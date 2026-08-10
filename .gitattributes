@@ -1,1 +1,5 @@
 Engine/libsrc/* linguist-vendored
+
+# Shell scripts must keep LF endings even when checked out on Windows,
+# so they still run after the trip to a Mac.
+*.sh text eol=lf
