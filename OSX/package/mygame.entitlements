@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!--
-	No entitlements are needed for a Developer ID build with the hardened
-	runtime. See README.md for the keys to add when submitting to the App
-	Store, and for the library validation exception needed by third party
-	plugin binaries you cannot re-sign.
--->
 <plist version="1.0">
 <dict>
+	<!--
+		SDL2.framework is the official prebuilt SDL release, signed by the SDL
+		team, not by you. Under the hardened runtime, library validation would
+		refuse to load a library whose Team ID differs from the app's, so it is
+		disabled here. This is the right default for a Developer ID build and
+		notarizes fine.
+
+		For the Mac App Store, remove this key and instead re-sign SDL2 (and any
+		plugin dylibs) with your own identity, and add the sandbox keys:
+		    com.apple.security.app-sandbox
+		    com.apple.security.device.usb
+		See README.md.
+	-->
+	<key>com.apple.security.cs.disable-library-validation</key>
+	<true/>
 </dict>
 </plist>
