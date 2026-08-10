@@ -8,39 +8,25 @@ namespace AGS.Editor
 {
     public class BuildTargetMacOS : BuildTargetBase
     {
-        public const string MACOS_DIR = "macOS";
+        // Output and EditorDir template directory. The Xcode-project target is
+        // the secondary macOS target; the plain "macOS" name/dir belongs to the
+        // app-bundle target (see BuildTargetMacOSApp).
+        public const string MACOS_DIR = "macOS-project";
+        public const string MACOS_DISPLAY_NAME = "macOS (Xcode project)";
         public const string MACOS_RESOURCES_DIR = "Resources";
 
         // The name every file and identifier in the shipped template carries.
         // On export it is swapped for the game's own name (see GetProjectName).
-        public const string MACOS_TEMPLATE_BASE = "AGSGame";
+        public const string MACOS_TEMPLATE_BASE = MacOSNaming.TEMPLATE_BASE;
 
         private string GetEditorMacOSTemplateDir()
         {
             return Path.Combine(Factory.AGSEditor.EditorDirectory, MACOS_DIR);
         }
 
-        /// <summary>
-        /// The base name used for the exported project's folder, .xcodeproj,
-        /// .xcconfig, .entitlements, prefix header and scheme. Derived from the
-        /// game's file name so the project is recognisable, and reduced to
-        /// letters and digits so it needs no quoting inside project.pbxproj.
-        /// Falls back to the template's own name when nothing usable is set.
-        /// </summary>
-        public static string GetProjectName(string baseGameFileName)
-        {
-            if (string.IsNullOrEmpty(baseGameFileName)) return MACOS_TEMPLATE_BASE;
-            StringBuilder sb = new StringBuilder(baseGameFileName.Length);
-            foreach (char c in baseGameFileName)
-            {
-                if (c < 128 && char.IsLetterOrDigit(c)) sb.Append(c);
-            }
-            return sb.Length > 0 ? sb.ToString() : MACOS_TEMPLATE_BASE;
-        }
-
         private string GetProjectName()
         {
-            return GetProjectName(Factory.AGSEditor.BaseGameFileName);
+            return MacOSNaming.GetProjectName(Factory.AGSEditor.BaseGameFileName);
         }
 
         /// <summary>
@@ -224,7 +210,7 @@ DEVELOPMENT_TEAM =
 
         public override string Name
         {
-            get { return MACOS_DIR; }
+            get { return MACOS_DISPLAY_NAME; }
         }
 
         public override string OutputDirectory

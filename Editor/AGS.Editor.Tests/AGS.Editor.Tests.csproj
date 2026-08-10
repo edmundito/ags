@@ -88,6 +88,8 @@
     <Compile Include="Editor\AutoComplete\AutoCompleteTests.cs" />
     <Compile Include="Editor\BuildTargets\BuildTargetBaseTests.cs" />
     <Compile Include="Editor\BuildTargets\BuildTargetMacOSTests.cs" />
+    <Compile Include="Editor\BuildTargets\BuildTargetMacOSAppTests.cs" />
+    <Compile Include="Editor\BuildTargets\MacOSNamingTests.cs" />
     <Compile Include="Editor\Panes\FreePanControlTests.cs" />
     <Compile Include="Editor\Translations\TranslationTests.cs" />
     <Compile Include="Editor\Utilities\IncludeUtilsTests.cs" />

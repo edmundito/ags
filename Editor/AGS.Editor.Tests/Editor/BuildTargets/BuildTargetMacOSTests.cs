@@ -30,8 +30,8 @@ namespace AGS.Editor.BuildTargets
         {
             BuildTargetMacOS target = new BuildTargetMacOS();
 
-            Assert.That(target.Name, Is.EqualTo("macOS"));
-            Assert.That(target.OutputDirectory, Is.EqualTo("macOS"));
+            Assert.That(target.Name, Is.EqualTo("macOS (Xcode project)"));
+            Assert.That(target.OutputDirectory, Is.EqualTo("macOS-project"));
         }
 
         [Test]
@@ -44,25 +44,6 @@ namespace AGS.Editor.BuildTargets
             Assert.That(names, Has.Some.EqualTo("AGSGame.xcconfig"));
             Assert.That(names, Has.Some.EqualTo(System.IO.Path.Combine("Frameworks", "AGSKit.xcframework.zip")));
             Assert.That(names, Has.Some.EqualTo(System.IO.Path.Combine("Frameworks", "SDL2.framework.zip")));
-        }
-
-        [Test]
-        public void GetProjectName_StripsSpacesAndKeepsCase()
-        {
-            Assert.That(BuildTargetMacOS.GetProjectName("AGS 363 Demo Game"), Is.EqualTo("AGS363DemoGame"));
-        }
-
-        [Test]
-        public void GetProjectName_DropsPunctuation()
-        {
-            Assert.That(BuildTargetMacOS.GetProjectName("My Game: The Sequel!"), Is.EqualTo("MyGameTheSequel"));
-        }
-
-        [Test]
-        public void GetProjectName_FallsBackWhenEmptyOrUnusable()
-        {
-            Assert.That(BuildTargetMacOS.GetProjectName(""), Is.EqualTo("AGSGame"));
-            Assert.That(BuildTargetMacOS.GetProjectName("***"), Is.EqualTo("AGSGame"));
         }
     }
 }
