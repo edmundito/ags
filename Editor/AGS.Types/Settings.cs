@@ -1316,7 +1316,7 @@ namespace AGS.Types
 
         [DisplayName(PROPERTY_ANDROID_APPLICATION_ID)]
         [Description("The application ID, used in app store. Also called package name, it's usually looks like com.mystudio.mygame, and it's used in store URLs. It must have at least two segments (one or more dots), and each segment must start with a letter.")]
-        [Category("Android")]
+        [Category("(Information: Android)")]
         [DefaultValue("com.mystudio.mygame")]
         public string AndroidApplicationId
         {
@@ -1338,7 +1338,7 @@ namespace AGS.Types
 
         [DisplayName(PROPERTY_ANDROID_APP_VERSION_CODE)]
         [Description("The version ID used by Google Play Store and others - positive integer, must be different from the last one uploaded.")]
-        [Category("Android")]
+        [Category("(Information: Android)")]
         [DefaultValue("1")]
         public int AndroidAppVersionCode
         {
@@ -1348,7 +1348,7 @@ namespace AGS.Types
 
         [DisplayName(PROPERTY_ANDROID_APP_VERSION_NAME)]
         [Description("The version name visible to users in the stores, this can be anything. Leave empty to use the same version you set in desktop platforms.")]
-        [Category("Android")]
+        [Category("(Information: Android)")]
         [DefaultValue("")]
         public string AndroidAppVersionName
         {
@@ -1358,7 +1358,7 @@ namespace AGS.Types
 
         [DisplayName("Build Format")]
         [Description("Use embedded formats when testing locally. Google Play only accepts AAB.")]
-        [Category("Android")]
+        [Category("(Information: Android)")]
         [DefaultValue(AndroidBuildFormat.Aab)]
         public AndroidBuildFormat AndroidBuildFormat
         {
@@ -1368,7 +1368,7 @@ namespace AGS.Types
 
         [DisplayName(PROPERTY_MACOS_BUNDLE_ID)]
         [Description("The bundle identifier for the macOS app, in reverse-DNS form such as com.mystudio.mygame. It becomes CFBundleIdentifier and PRODUCT_BUNDLE_IDENTIFIER in the exported Xcode project. It must have at least two segments (one or more dots).")]
-        [Category("macOS")]
+        [Category("(Information: macOS)")]
         [DefaultValue("com.mystudio.mygame")]
         public string MacOSBundleIdentifier
         {
@@ -1389,7 +1389,7 @@ namespace AGS.Types
 
         [DisplayName(PROPERTY_MACOS_APP_VERSION)]
         [Description("The version string shown in the macOS app bundle (CFBundleShortVersionString / MARKETING_VERSION), such as 1.0 or 2.3.1.")]
-        [Category("macOS")]
+        [Category("(Information: macOS)")]
         [DefaultValue("1.0")]
         public string MacOSAppVersion
         {
