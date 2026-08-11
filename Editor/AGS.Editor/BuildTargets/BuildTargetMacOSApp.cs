@@ -56,7 +56,7 @@ APP_VERSION=""" + version + @"""
         {
             Dictionary<string, string> paths = new Dictionary<string, string>();
             string templateDir = GetEditorMacOSAppTemplateDir();
-            string[] probes = { "AGSGame.app.zip", "sign.sh", "AGSGame.entitlements" };
+            string[] probes = { "AGSGame.app.zip", "make-app.sh", "AGSGame.entitlements" };
             foreach (string probe in probes) paths.Add(probe, templateDir);
             return paths;
         }
@@ -94,7 +94,7 @@ APP_VERSION=""" + version + @"""
             foreach (Plugin plugin in Factory.AGSEditor.CurrentGame.Plugins)
             {
                 errors.Add(new CompileWarning("macOS: plugin " + plugin.FileName +
-                    " has no macOS build. Place a lib<name>.dylib next to sign.sh and it " +
+                    " has no macOS build. Place a lib<name>.dylib next to make-app.sh and it " +
                     "will be copied into the app bundle and signed with your identity."));
             }
         }
@@ -105,6 +105,21 @@ APP_VERSION=""" + version + @"""
             WarnAboutPlugins(errors);
 
             CopyTemplate(GetEditorMacOSAppTemplateDir());
+
+            // Name the shipped app archive after the game so the output folder
+            // reads as the game's deliverable. The bundle inside stays
+            // AGSGame.app; sign.sh renames it to <APP_NAME>.app on the Mac.
+            string projectName = GetProjectName();
+            if (projectName != MacOSNaming.TEMPLATE_BASE)
+            {
+                string oldZip = Utilities.ResolveSourcePath(GetCompiledPath("AGSGame.app.zip"));
+                string newZip = Utilities.ResolveSourcePath(GetCompiledPath(projectName + ".app.zip"));
+                if (File.Exists(oldZip))
+                {
+                    if (File.Exists(newZip)) File.Delete(newZip);
+                    File.Move(oldZip, newZip);
+                }
+            }
 
             string resourcesDir = GetCompiledPath(MACOS_APP_RESOURCES_DIR);
             if (!Directory.Exists(Utilities.ResolveSourcePath(resourcesDir)))
@@ -132,7 +147,7 @@ APP_VERSION=""" + version + @"""
             File.WriteAllBytes(gameEnvPath, Encoding.UTF8.GetBytes(gameEnv));
 
             errors.Add(new CompileWarning("macOS: app written to " + GetCompiledPath() +
-                ". Copy the folder to a Mac and run: sh sign.sh"));
+                ". Copy the folder to a Mac and run: sh make-app.sh"));
             return true;
         }
 

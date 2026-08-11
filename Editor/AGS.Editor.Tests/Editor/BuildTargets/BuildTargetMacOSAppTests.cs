@@ -42,7 +42,7 @@ namespace AGS.Editor.BuildTargets
             string[] names = target.GetRequiredLibraryNames();
 
             Assert.That(names, Has.Some.EqualTo("AGSGame.app.zip"));
-            Assert.That(names, Has.Some.EqualTo("sign.sh"));
+            Assert.That(names, Has.Some.EqualTo("make-app.sh"));
             Assert.That(names, Has.Some.EqualTo("AGSGame.entitlements"));
         }
     }
