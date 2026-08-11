@@ -51,7 +51,7 @@
 		1A00000000000000000000A9 /* plugin_registration.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = plugin_registration.hpp; sourceTree = "<group>"; };
 		1A00000000000000000000AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A00000000000000000000AB /* AGSGame.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = AGSGame.xcconfig; sourceTree = "<group>"; };
-		1A00000000000000000000AC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		1A00000000000000000000AC /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		1A00000000000000000000B0 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		1A00000000000000000000B1 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		1A00000000000000000000B2 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -90,7 +90,7 @@
 		1C00000000000000000000A1 /* AGSGame */ = {
 			isa = PBXGroup;
 			children = (
-				1A00000000000000000000AC /* README.md */,
+				1A00000000000000000000AC /* README.txt */,
 				1A00000000000000000000AB /* AGSGame.xcconfig */,
 				1A00000000000000000000AA /* Info.plist */,
 				1A00000000000000000000A6 /* AGSGame.entitlements */,

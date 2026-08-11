@@ -4,16 +4,17 @@ This port was initially done by Edward Rudd for providing Gemini Rue in a Humble
 
 There are two audiences for this directory, and they use different things:
 
-- **Game authors** who want a macOS build of their game. You want `OSX/package`, the standalone Xcode project the Editor exports. See the next section.
+- **Game authors** who want a macOS build of their game. The Editor exports one of two templates — `OSX/app-package` (a prebuilt app you re-sign, no Xcode needed) or `OSX/package` (a full Xcode project). See the next section.
 - **Engine developers** working on AGS itself on a Mac. You want the CMake build, or the in-place `OSX/xcode` workspace. Those are further down.
 
 ## Exporting a game from the Editor
 
-The AGS Editor can produce a ready-to-open Xcode project. In the game's **General Settings**, tick `macOS` under Build Targets and build. The Editor writes the project to `Compiled/macOS/mygame`.
+The Editor offers two macOS build targets in the game's **General Settings** under Build Targets. Each writes a folder with its own `README.txt` that walks through the Mac side in full. Neither needs the AGS source tree — the engine is already compiled in.
 
-Copy that folder to a Mac with Xcode, open `mygame.xcodeproj`, pick your signing team in **Signing & Capabilities**, then **Product > Archive**. `Compiled/macOS/mygame/README.md` walks through it in full. Nothing here needs the AGS source tree — the engine is already compiled into `AGSKit.xcframework` inside the project.
+- **macOS** (recommended) — a prebuilt app. Writes `Compiled/macOS/`. Copy it to a Mac and run `sh make-app.sh`; it injects your game data and produces `<game>.app`. Only the Xcode **Command Line Tools** are needed, and signing is optional (only to distribute to other people). Template: `OSX/app-package`.
+- **macOS (Xcode project)** — a full Xcode project. Writes `Compiled/macOS-project/<game>`. Copy it to a Mac, open `<game>.xcodeproj`, pick your signing team, then **Product > Archive**. Needs the full Xcode IDE; use it if you compile plugins from source. Template: `OSX/package`.
 
-The template itself lives in `OSX/package`, and `OSX/osx-build.sh` assembles it (fetches the libraries, builds `AGSKit.xcframework`, zips the result). That is what CI ships inside the Editor installer; you only run it by hand if you are working on the export machinery.
+`OSX/osx-build.sh` assembles both templates (fetches the libraries, builds `AGSKit.xcframework`, builds the prebuilt app, zips the results). That is what CI ships inside the Editor installer; you only run it by hand if you are working on the export machinery.
 
 ## Creating Icon Sets
 

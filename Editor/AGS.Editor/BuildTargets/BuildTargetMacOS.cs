@@ -146,7 +146,7 @@ DEVELOPMENT_TEAM =
                 Path.Combine(newProj, "project.pbxproj"),
                 Path.Combine(newProj, "xcshareddata", "xcschemes", projectName + ".xcscheme"),
                 Path.Combine(root, projectName + "-Prefix.pch"),
-                Path.Combine(root, "README.md"),
+                Path.Combine(root, "README.txt"),
             };
             foreach (string file in textFiles)
             {
