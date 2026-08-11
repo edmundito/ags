@@ -43,10 +43,13 @@ if [ ! -d "$APP" ]; then
     [ "$APP" = "AGSGame.app" ] || mv AGSGame.app "$APP"
 fi
 
-# 2. Inject game data.
-rsync -a --delete Resources/ "$APP/Contents/Resources/"
+# 2. Inject game data. Keep ags.icns: the prebuilt app ships the default AGS
+#    icon and --delete would otherwise wipe it (your Resources/ holds only game
+#    data). Step 3 overwrites it if you supply your own icon.
+rsync -a --delete --exclude=ags.icns Resources/ "$APP/Contents/Resources/"
 
 # 3. Optional icon: convert icon.png -> ags.icns before signing (sealed resource).
+#    No icon.png keeps the default AGS icon shipped in the prebuilt app.
 if [ -f icon.png ]; then
     sh make-icon.sh icon.png "$APP/Contents/Resources/ags.icns"
 fi
