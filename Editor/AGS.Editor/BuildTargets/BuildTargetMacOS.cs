@@ -6,27 +6,18 @@ using System.Text;
 
 namespace AGS.Editor
 {
-    public class BuildTargetMacOS : BuildTargetBase
+    public class BuildTargetMacOS : BuildTargetMacOSBase
     {
         // Output and EditorDir template directory. The Xcode-project target is
         // the secondary macOS target; the plain "macOS" name/dir belongs to the
         // app-bundle target (see BuildTargetMacOSApp).
         public const string MACOS_DIR = "macOS-project";
         public const string MACOS_DISPLAY_NAME = "macOS (Xcode project)";
-        public const string MACOS_RESOURCES_DIR = "Resources";
 
-        // The name every file and identifier in the shipped template carries.
-        // On export it is swapped for the game's own name (see GetProjectName).
-        public const string MACOS_TEMPLATE_BASE = MacOSNaming.TEMPLATE_BASE;
-
-        private string GetEditorMacOSTemplateDir()
+        // The Xcode target nests Resources under the per-game project folder.
+        protected override string GetResourcesRelativePath()
         {
-            return Path.Combine(Factory.AGSEditor.EditorDirectory, MACOS_DIR);
-        }
-
-        private string GetProjectName()
-        {
-            return MacOSNaming.GetProjectName(Factory.AGSEditor.BaseGameFileName);
+            return Path.Combine(GetProjectName(), MACOS_RESOURCES_DIR);
         }
 
         /// <summary>
@@ -39,7 +30,7 @@ namespace AGS.Editor
         public override IDictionary<string, string> GetRequiredLibraryPaths()
         {
             Dictionary<string, string> paths = new Dictionary<string, string>();
-            string templateDir = GetEditorMacOSTemplateDir();
+            string templateDir = GetEditorTemplateDir();
             // Frameworks ship as .zip archives (see osx-build.sh) so their
             // internal symlinks survive being copied here on Windows, so the
             // probe looks for the archives, not the unpacked frameworks.
@@ -55,21 +46,6 @@ namespace AGS.Editor
                 paths.Add(probe, templateDir);
             }
             return paths;
-        }
-
-        public override string[] GetPlatformStandardSubfolders()
-        {
-            return new string[]
-            {
-                GetCompiledPath(GetProjectName(), MACOS_RESOURCES_DIR)
-            };
-        }
-
-        public override void DeleteMainGameData(string name, CompileMessages errors)
-        {
-            string resourcesDir = Path.Combine(Path.Combine(OutputDirectoryFullPath, GetProjectName()),
-                MACOS_RESOURCES_DIR);
-            DeleteCommonGameFiles(resourcesDir, name, errors);
         }
 
         /// <summary>
@@ -156,15 +132,12 @@ DEVELOPMENT_TEAM =
             }
         }
 
-        private void WarnAboutPlugins(CompileMessages errors)
+        protected override string GetPluginWarning(Plugin plugin)
         {
-            foreach (Plugin plugin in Factory.AGSEditor.CurrentGame.Plugins)
-            {
-                errors.Add(new CompileWarning("macOS: plugin " + plugin.FileName +
-                    " has no macOS build. Either add its sources to the exported Xcode project and register it " +
-                    "in plugin_registration.cpp, or place a lib<name>.dylib in the app bundle and re-sign it with " +
-                    "your own certificate."));
-            }
+            return "macOS: plugin " + plugin.FileName +
+                " has no macOS build. Either add its sources to the exported Xcode project and register it " +
+                "in plugin_registration.cpp, or place a lib<name>.dylib in the app bundle and re-sign it with " +
+                "your own certificate.";
         }
 
         public override bool Build(CompileMessages errors, bool forceRebuild)
@@ -174,27 +147,10 @@ DEVELOPMENT_TEAM =
 
             string projectDir = GetProjectName();
 
-            CopyTemplate(GetEditorMacOSTemplateDir(), projectDir);
+            CopyTemplate(GetEditorTemplateDir(), projectDir);
             RenameTemplateToProject(projectDir, projectDir);
 
-            string resourcesDir = GetCompiledPath(projectDir, MACOS_RESOURCES_DIR);
-            if (!Directory.Exists(Utilities.ResolveSourcePath(resourcesDir)))
-                Directory.CreateDirectory(Utilities.ResolveSourcePath(resourcesDir));
-
-            foreach (string fileName in Directory.GetFiles(Path.Combine(AGSEditor.OUTPUT_DIRECTORY, AGSEditor.DATA_OUTPUT_DIRECTORY)))
-            {
-                if ((File.GetAttributes(fileName) & (FileAttributes.Hidden | FileAttributes.System | FileAttributes.Temporary)) != 0)
-                    continue;
-                if ((!fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) &&
-                    (!Path.GetFileName(fileName).Equals("winsetup.exe", StringComparison.OrdinalIgnoreCase)) &&
-                    (!Path.GetFileName(fileName).Equals(AGSEditor.CONFIG_FILE_NAME, StringComparison.OrdinalIgnoreCase)))
-                {
-                    Utilities.HardlinkOrCopy(Path.Combine(resourcesDir, Path.GetFileName(fileName)), fileName, true);
-                }
-            }
-
-            // Regenerate acsetup.cfg next to the game data, with the game's current parameters
-            GenerateConfigFile(resourcesDir);
+            CopyGameData(GetCompiledPath(projectDir, MACOS_RESOURCES_DIR));
 
             // Overwrite the template xcconfig with the game's identity
             Settings settings = Factory.AGSEditor.CurrentGame.Settings;
@@ -216,13 +172,6 @@ DEVELOPMENT_TEAM =
         public override string OutputDirectory
         {
             get { return MACOS_DIR; }
-        }
-
-        public override RuntimeSetup FixInvalidSettings(RuntimeSetup setup)
-        {
-            setup.GraphicsDriver = setup.GraphicsDriver == GraphicsDriver.D3D9 ? GraphicsDriver.OpenGL : setup.GraphicsDriver;
-
-            return setup;
         }
     }
 }

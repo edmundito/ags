@@ -1,5 +1,4 @@
 using AGS.Types;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -8,36 +7,25 @@ namespace AGS.Editor
 {
     /// <summary>
     /// Exports the game as a prebuilt, unsigned macOS .app plus a Mac-side
-    /// sign.sh. The engine executable is identical for every game, so the .app
-    /// is built once on CI and shipped zipped (its internal symlinks cannot
+    /// make-app.sh. The engine executable is identical for every game, so the
+    /// .app is built once on CI and shipped zipped (its internal symlinks cannot
     /// survive assembly on Windows). This target stays pure file-copy: it drops
-    /// the template, fills a flat Resources/, and writes game.env. sign.sh does
-    /// the rest on the Mac (unpack, inject, patch identity, sign, notarize).
+    /// the template, fills a flat Resources/, and writes game.env. make-app.sh
+    /// does the rest on the Mac (unpack, inject, patch identity, sign, notarize).
     /// </summary>
-    public class BuildTargetMacOSApp : BuildTargetBase
+    public class BuildTargetMacOSApp : BuildTargetMacOSBase
     {
         public const string MACOS_APP_DIR = "macOS";
-        public const string MACOS_APP_RESOURCES_DIR = "Resources";
-
-        private string GetEditorMacOSAppTemplateDir()
-        {
-            return Path.Combine(Factory.AGSEditor.EditorDirectory, MACOS_APP_DIR);
-        }
-
-        private string GetProjectName()
-        {
-            return MacOSNaming.GetProjectName(Factory.AGSEditor.BaseGameFileName);
-        }
 
         /// <summary>
-        /// The identity file sign.sh sources on the Mac. Written with UNIX line
-        /// endings; only ever read on macOS.
+        /// The identity file make-app.sh sources on the Mac. Written with UNIX
+        /// line endings; only ever read on macOS.
         /// </summary>
         public static string BuildGameEnvText(string gameName, string appName, string bundleId, string version)
         {
             string text =
 @"# Written by the AGS Editor. Rebuilding the game overwrites this file.
-# sign.sh reads these; put your signing identity in sign.sh (or signing.env).
+# make-app.sh reads these; put your signing identity in make-app.sh (or signing.env).
 GAME_NAME=""" + gameName + @"""
 APP_NAME=""" + appName + @"""
 BUNDLE_ID=""" + bundleId + @"""
@@ -55,21 +43,10 @@ APP_VERSION=""" + version + @"""
         public override IDictionary<string, string> GetRequiredLibraryPaths()
         {
             Dictionary<string, string> paths = new Dictionary<string, string>();
-            string templateDir = GetEditorMacOSAppTemplateDir();
+            string templateDir = GetEditorTemplateDir();
             string[] probes = { "AGSGame.app.zip", "make-app.sh", "AGSGame.entitlements" };
             foreach (string probe in probes) paths.Add(probe, templateDir);
             return paths;
-        }
-
-        public override string[] GetPlatformStandardSubfolders()
-        {
-            return new string[] { GetCompiledPath(MACOS_APP_RESOURCES_DIR) };
-        }
-
-        public override void DeleteMainGameData(string name, CompileMessages errors)
-        {
-            string resourcesDir = Path.Combine(OutputDirectoryFullPath, MACOS_APP_RESOURCES_DIR);
-            DeleteCommonGameFiles(resourcesDir, name, errors);
         }
 
         /// <summary>
@@ -89,14 +66,11 @@ APP_VERSION=""" + version + @"""
             }
         }
 
-        private void WarnAboutPlugins(CompileMessages errors)
+        protected override string GetPluginWarning(Plugin plugin)
         {
-            foreach (Plugin plugin in Factory.AGSEditor.CurrentGame.Plugins)
-            {
-                errors.Add(new CompileWarning("macOS: plugin " + plugin.FileName +
-                    " has no macOS build. Place a lib<name>.dylib next to make-app.sh and it " +
-                    "will be copied into the app bundle and signed with your identity."));
-            }
+            return "macOS: plugin " + plugin.FileName +
+                " has no macOS build. Place a lib<name>.dylib next to make-app.sh and it " +
+                "will be copied into the app bundle and signed with your identity.";
         }
 
         public override bool Build(CompileMessages errors, bool forceRebuild)
@@ -104,13 +78,13 @@ APP_VERSION=""" + version + @"""
             if (!base.Build(errors, forceRebuild)) return false;
             WarnAboutPlugins(errors);
 
-            CopyTemplate(GetEditorMacOSAppTemplateDir());
+            CopyTemplate(GetEditorTemplateDir());
 
             // Name the shipped app archive after the game so the output folder
             // reads as the game's deliverable. The bundle inside stays
-            // AGSGame.app; sign.sh renames it to <APP_NAME>.app on the Mac.
+            // AGSGame.app; make-app.sh renames it to <APP_NAME>.app on the Mac.
             string projectName = GetProjectName();
-            if (projectName != MacOSNaming.TEMPLATE_BASE)
+            if (projectName != MACOS_TEMPLATE_BASE)
             {
                 string oldZip = Utilities.ResolveSourcePath(GetCompiledPath("AGSGame.app.zip"));
                 string newZip = Utilities.ResolveSourcePath(GetCompiledPath(projectName + ".app.zip"));
@@ -121,27 +95,10 @@ APP_VERSION=""" + version + @"""
                 }
             }
 
-            string resourcesDir = GetCompiledPath(MACOS_APP_RESOURCES_DIR);
-            if (!Directory.Exists(Utilities.ResolveSourcePath(resourcesDir)))
-                Directory.CreateDirectory(Utilities.ResolveSourcePath(resourcesDir));
-
-            foreach (string fileName in Directory.GetFiles(Path.Combine(AGSEditor.OUTPUT_DIRECTORY, AGSEditor.DATA_OUTPUT_DIRECTORY)))
-            {
-                if ((File.GetAttributes(fileName) & (FileAttributes.Hidden | FileAttributes.System | FileAttributes.Temporary)) != 0)
-                    continue;
-                if ((!fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) &&
-                    (!Path.GetFileName(fileName).Equals("winsetup.exe", StringComparison.OrdinalIgnoreCase)) &&
-                    (!Path.GetFileName(fileName).Equals(AGSEditor.CONFIG_FILE_NAME, StringComparison.OrdinalIgnoreCase)))
-                {
-                    Utilities.HardlinkOrCopy(Path.Combine(resourcesDir, Path.GetFileName(fileName)), fileName, true);
-                }
-            }
-
-            // Regenerate acsetup.cfg next to the game data, with current parameters.
-            GenerateConfigFile(resourcesDir);
+            CopyGameData(GetCompiledPath(MACOS_RESOURCES_DIR));
 
             Settings settings = Factory.AGSEditor.CurrentGame.Settings;
-            string gameEnv = BuildGameEnvText(settings.GameName, GetProjectName(),
+            string gameEnv = BuildGameEnvText(settings.GameName, projectName,
                 settings.MacOSBundleIdentifier, settings.MacOSAppVersion);
             string gameEnvPath = Utilities.ResolveSourcePath(GetCompiledPath("game.env"));
             File.WriteAllBytes(gameEnvPath, Encoding.UTF8.GetBytes(gameEnv));
@@ -159,13 +116,6 @@ APP_VERSION=""" + version + @"""
         public override string OutputDirectory
         {
             get { return MACOS_APP_DIR; }
-        }
-
-        public override RuntimeSetup FixInvalidSettings(RuntimeSetup setup)
-        {
-            setup.GraphicsDriver = setup.GraphicsDriver == GraphicsDriver.D3D9 ? GraphicsDriver.OpenGL : setup.GraphicsDriver;
-
-            return setup;
         }
     }
 }
