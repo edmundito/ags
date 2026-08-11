@@ -1,5 +1,17 @@
 # OSX output and temporary files
+# NOTE: anchored with a leading slash so they match only here, and not the
+# package/include directory below.
 buildlibs/opt/
 buildlibs/build/
-include/
-lib/
+/include/
+/lib/
+
+# Contents assembled by osx-build.sh into the exportable project template.
+# The template's own files are tracked; what the script fetches or builds is not.
+package/Frameworks/*
+!package/Frameworks/.gitkeep
+package/include/*
+!package/include/.gitkeep
+package/Resources/*
+!package/Resources/.gitkeep
+package/build/

@@ -122,7 +122,8 @@ namespace AGS.Editor
          *                  expose Character.Transparency, Baseline, RoomObject.Transparency.
          * 3.6.3.8        - Font Overrides in Translation, TextOutlineColor in GUI controls.
          * 3.6.3.10       - Settings.GameTextLanguage, TranslateTextParser, DisplaySingleDialogOption
-         * 3.6.3.12       - Settings.TurnOrderPriority, TextBoxKeyClaimStyle.
+         * 3.6.3.12       - Settings.TurnOrderPriority, TextBoxKeyClaimStyle,
+         *                  Settings.MacOSBundleIdentifier, Settings.MacOSAppVersion.
         */
         public const int    LATEST_XML_VERSION_INDEX = 3060312;
         /*
@@ -228,6 +229,8 @@ namespace AGS.Editor
             BuildTargetsInfo.RegisterBuildTarget(new BuildTargetLinux());
             BuildTargetsInfo.RegisterBuildTarget(new BuildTargetWeb());
             BuildTargetsInfo.RegisterBuildTarget(new BuildTargetAndroid());
+            BuildTargetsInfo.RegisterBuildTarget(new BuildTargetMacOSApp());
+            BuildTargetsInfo.RegisterBuildTarget(new BuildTargetMacOS());
         }
 
         public Game CurrentGame
